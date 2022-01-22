@@ -1,9 +1,6 @@
 package com.eh.niver.controller
 
-import com.eh.niver.model.Person
 import com.eh.niver.model.vo.RequestLogin
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -24,6 +21,8 @@ class UserController {
             return operacao.toString()
         } catch (e: Exception) {
             return "Pow deu erro: ${e.message}."
+        } finally {
+            println("Passei pelo finalmente")
         }
 
     }
