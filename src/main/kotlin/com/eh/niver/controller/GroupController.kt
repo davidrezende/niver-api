@@ -2,6 +2,7 @@ package com.eh.niver.controller
 
 import com.eh.niver.model.Group
 import com.eh.niver.model.vo.RequestSaveGroup
+import com.eh.niver.model.vo.ResponseGroup
 import com.eh.niver.repository.GroupRepository
 import com.eh.niver.repository.PersonRepository
 import org.slf4j.LoggerFactory
@@ -38,9 +39,15 @@ class GroupController(val repository: GroupRepository, val repositoryPerson: Per
         return repository.deleteById(groupId.toLong())
     }
 
-    @GetMapping("/GroupOwner/{groupOwner}")
-    fun searchGroupByOwner(@PathVariable groupOwner: Long): List<Group>{
+    @GetMapping("/groupOwner/{groupOwner}")
+    fun searchGroupByOwner(@PathVariable groupOwner: Long): List<ResponseGroup>{
         val person = repositoryPerson.findByIdPerson(groupOwner)
-        return repository.findGroupByOwner(person)
+        val groups = repository.findGroupByOwner(person)
+        return groups.map {
+            ResponseGroup(
+                name = it.name,
+                idGroup = it.idGroup
+            )
+        }
     }
 }
