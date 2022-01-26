@@ -37,4 +37,10 @@ class GroupController(val repository: GroupRepository, val repositoryPerson: Per
         logger.info("Deletenado um Grupo: $groupId")
         return repository.deleteById(groupId.toLong())
     }
+
+    @GetMapping("/GroupOwner/{groupOwner}")
+    fun searchGroupByOwner(@PathVariable groupOwner: Long): List<Group>{
+        val person = repositoryPerson.findByIdPerson(groupOwner)
+        return repository.findGroupByOwner(person)
+    }
 }
