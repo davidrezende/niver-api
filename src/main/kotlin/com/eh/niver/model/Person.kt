@@ -16,5 +16,7 @@ data class Person(
     @Column(name = "des_email")
     var email: String,
     @Column(name = "desc_password")
-    var password: String
+    var password: String,
+    @OneToMany(fetch=FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
+    var groups: List<Group>?
 )
