@@ -18,7 +18,7 @@ class PersonController(val repository: PersonRepository, val repositoryGroup: Gr
         private val logger = LoggerFactory.getLogger(PersonController::class.java)
     }
 
-    @ApiOperation(value = "Ah mano sei lá ela puxa a pessoa pelo id é isso.")
+    @ApiOperation(value = "Procura pessoa por Id.")
     @GetMapping("/id/{idPerson}")
     fun searchPersonById(@PathVariable idPerson: Long): Person {
         logger.info("Procurando pessoa por ID: $idPerson")
@@ -57,14 +57,6 @@ class PersonController(val repository: PersonRepository, val repositoryGroup: Gr
     @ApiOperation(value = "Deleta uma pessoa.")
     @DeleteMapping("/{personId}")
     fun deletePerson(@PathVariable personId: String) {
-
-//        val person = repository.findByIdPerson(personId.toLong())
-//        println(person)
-//        val groups = repositoryGroup.findGroupByOwner(person)
-//        groups.map{
-//            println(it)
-//            repositoryGroup.deleteById(it.idGroup!!)
-//        }
         logger.info("Deletando uma pessoa $personId")
         return repository.deleteById(personId.toLong())
     }

@@ -10,8 +10,8 @@ data class Group(
     var idGroup: Long?,
     @Column(name = "des_name")
     var name: String,
-    @OneToOne(fetch=FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
-    @PrimaryKeyJoinColumn(name = "id_owner")
-//    @JoinColumn
+    @ManyToOne
+    @JoinColumn(name = "id_owner")
     var owner: Person
+
 )

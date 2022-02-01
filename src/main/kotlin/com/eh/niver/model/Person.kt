@@ -1,5 +1,6 @@
 package com.eh.niver.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.time.LocalDate
 import javax.persistence.*
 
@@ -17,6 +18,7 @@ data class Person(
     var email: String,
     @Column(name = "desc_password")
     var password: String,
-    @OneToMany(fetch=FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
-    var groups: List<Group>?
+    @JsonIgnore
+    @OneToMany(cascade = [CascadeType.ALL], mappedBy = "owner")
+    var groups: List<Group>? = null
 )
