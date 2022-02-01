@@ -13,5 +13,3 @@ interface PersonRepository : JpaRepository<Person, Long> {
     fun findByBirthday(birthday: LocalDate): List<Person>
     fun findByIdPerson( idPerson: Long): Optional<Person>
 }
-
-//Ponte
