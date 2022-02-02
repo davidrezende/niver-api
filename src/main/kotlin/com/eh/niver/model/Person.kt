@@ -20,5 +20,9 @@ data class Person(
     var password: String,
     @JsonIgnore
     @OneToMany(cascade = [CascadeType.ALL], mappedBy = "owner")
+    var groupsCreated: List<Group>? = null,
+
+    @JsonIgnore
+    @ManyToMany(cascade = [CascadeType.ALL], mappedBy = "people")
     var groups: List<Group>? = null
 )
