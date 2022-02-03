@@ -3,7 +3,7 @@ package com.eh.niver.controller
 import com.eh.niver.model.Group
 import com.eh.niver.model.vo.RequestSaveGroup
 import com.eh.niver.model.vo.ResponseGroup
-import com.eh.niver.model.vo.ResponseMembers
+import com.eh.niver.model.vo.ResponseMember
 import com.eh.niver.repository.GroupRepository
 import com.eh.niver.repository.PersonRepository
 import org.slf4j.LoggerFactory
@@ -30,7 +30,7 @@ class GroupController(val repository: GroupRepository, val repositoryPerson: Per
             )
             return repository.save(parseGroup)
         } else {
-            throw Exception("Pessoa no ecxiste")
+            throw Exception("Pessoa no existe")
         }
     }
 
@@ -40,7 +40,31 @@ class GroupController(val repository: GroupRepository, val repositoryPerson: Per
         return repository.deleteById(groupId.toLong())
     }
 
-    @GetMapping("/groupOwnerWithMembers/{groupOwner}")
+    @PostMapping("/member/{personId}/group/{groupId}")
+    fun savePersonInGroup(@PathVariable personId: String, @PathVariable groupId: String) {
+        logger.info("Inserindo um integrante com id:$personId ao grupo: $groupId")
+        val group = repository.findById(groupId.toLong())
+        val person = repositoryPerson.findByIdPerson(personId.toLong())
+        if (!group.isEmpty && !person.isEmpty) {
+            group.get().members?.add(person.get())
+        }
+        repository.save(group.get())
+    }
+
+    @DeleteMapping("/member/{personId}/group/{groupId}")
+    fun deletePersonInGroup(@PathVariable personId: String, @PathVariable groupId: String) {
+        logger.info("Deletando a pessoa:$personId do grupo:$groupId")
+        val group = repository.findById(groupId.toLong())
+        if (group.isEmpty) {
+            throw Exception("Grupo não existe!")
+        }
+        group.get().members?.remove(
+            group.get().members!!.first { it.idPerson == personId.toLong() }
+        )
+        repository.save(group.get())
+    }
+
+    @GetMapping("/members/groupOwner/{groupOwner}")
     fun searchGroupByOwnerWithMembers(@PathVariable groupOwner: Long): List<ResponseGroup> {
         val person = repositoryPerson.findByIdPerson(groupOwner)
         val groups = repository.findGroupByOwner(person)
@@ -48,8 +72,8 @@ class GroupController(val repository: GroupRepository, val repositoryPerson: Per
             ResponseGroup(
                 name = it.name,
                 idGroup = it.idGroup,
-                people = it.people?.map { oto ->
-                    ResponseMembers(
+                members = it.members?.map { oto ->
+                    ResponseMember(
                         id = oto.idPerson,
                         name = oto.name
                     )
@@ -57,5 +81,24 @@ class GroupController(val repository: GroupRepository, val repositoryPerson: Per
             )
 
         }
+    }
+
+    @GetMapping("/group/{groupId}")
+    fun searchGroupByOwnerWithMembers(@PathVariable groupId: String): ResponseGroup {
+        val group = repository.findById(groupId.toLong())
+        if (group.isEmpty) {
+            throw Exception("Group does not exist!")
+        }
+        return ResponseGroup(
+            idGroup = group.get().idGroup,
+            name = group.get().name,
+            owner = group.get().owner.idPerson,
+            members = group.get().members?.map { oto ->
+                ResponseMember(
+                    id = oto.idPerson,
+                    name = oto.name
+                )
+            }
+        )
     }
 }
