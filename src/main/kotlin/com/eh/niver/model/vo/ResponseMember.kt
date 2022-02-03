@@ -1,6 +1,6 @@
 package com.eh.niver.model.vo
 
-data class ResponseMembers(
+data class ResponseMember(
     var id : Long,
     var name: String
 )

@@ -19,10 +19,37 @@ data class Person(
     @Column(name = "desc_password")
     var password: String,
     @JsonIgnore
-    @OneToMany(cascade = [CascadeType.ALL], mappedBy = "owner")
+    @OneToMany(cascade = [CascadeType.REMOVE], mappedBy = "owner")
     var groupsCreated: List<Group>? = null,
 
     @JsonIgnore
-    @ManyToMany(cascade = [CascadeType.ALL], mappedBy = "people")
+    @ManyToMany(
+        fetch = FetchType.LAZY,
+        cascade = [
+            CascadeType.PERSIST,
+            CascadeType.MERGE,
+            CascadeType.DETACH,
+            CascadeType.REFRESH
+        ]
+    )
+    @JoinTable(
+        name = "ta_group_members",
+        joinColumns = [
+            JoinColumn(
+                name = "id_person",
+                nullable = false,
+                updatable = false
+            )
+        ],
+        inverseJoinColumns = [
+            JoinColumn(
+                name = "id_group",
+                nullable = false,
+                updatable = false
+            )
+        ],
+        foreignKey = ForeignKey(value = ConstraintMode.CONSTRAINT),
+        inverseForeignKey = ForeignKey(value = ConstraintMode.CONSTRAINT)
+    )
     var groups: List<Group>? = null
 )

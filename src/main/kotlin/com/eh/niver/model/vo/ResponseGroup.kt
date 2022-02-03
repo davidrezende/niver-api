@@ -1,9 +1,11 @@
 package com.eh.niver.model.vo
 
-import com.eh.niver.model.Person
+import com.fasterxml.jackson.annotation.JsonIgnore
 
 data class ResponseGroup(
     var name: String,
     var idGroup: Long?,
-    var people: List<ResponseMembers>? = null
+    var members: List<ResponseMember>? = null,
+    @JsonIgnore
+    var owner: Long? = null
 )
