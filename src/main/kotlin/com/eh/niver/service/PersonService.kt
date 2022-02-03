@@ -5,4 +5,5 @@ import java.util.*
 
 interface PersonService {
     fun getPersonById(idPerson: Long): Optional<Person>
+    fun getBirthdaysToday(): List<Person>?
 }

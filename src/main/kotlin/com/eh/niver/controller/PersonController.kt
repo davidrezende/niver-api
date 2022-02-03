@@ -37,7 +37,7 @@ class PersonController(val repository: PersonRepository, val repositoryGroup: Gr
     fun searchBirthdaysByToday(): List<Person> {
         val today = LocalDate.now()
         logger.info("Procurando aniversários hoje: $today")
-        return repository.findByBirthday(today)
+        return repository.findByBirthdaysForToday(today)
     }
 
     @ApiOperation(value = "Salva uma pessoa.")
