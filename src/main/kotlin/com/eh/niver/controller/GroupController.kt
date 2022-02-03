@@ -58,4 +58,20 @@ class GroupController(val repository: GroupRepository, val repositoryPerson: Per
 
         }
     }
+    @PutMapping()
+    fun updateGroup(@RequestBody groupPostman: RequestSaveGroup): Group {
+        logger.info("Alterando um Grupo: $groupPostman")
+        val person = repositoryPerson.findByIdPerson(groupPostman.idOwner.toLong())
+        if (person.isPresent) {
+            logger.info("Pessoa encontrada pelo id: ${groupPostman.idOwner}")
+            val parseGroup = Group(
+                idGroup = groupPostman.idGroup,
+                name = groupPostman.name,
+                owner = person.get()
+            )
+            return repository.save(parseGroup)
+        } else {
+            throw Exception("Pessoa no ecxiste")
+        }
+    }
 }
