@@ -10,8 +10,16 @@ data class Group(
     var idGroup: Long?,
     @Column(name = "des_name")
     var name: String,
-    @ManyToOne
+    @ManyToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = "id_owner")
-    var owner: Person
+    var owner: Person,
+
+    @ManyToMany(cascade = [CascadeType.ALL])
+    @JoinTable(
+        name = "ta_group_members",
+        joinColumns = [JoinColumn(name = "id_group")],
+        inverseJoinColumns = [JoinColumn(name = "id_person")]
+    )
+    var people: List<Person>? = null
 
 )
