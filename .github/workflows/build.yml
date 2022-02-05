@@ -1,75 +1,77 @@
-#Workflow name
 name: CI/CD Pipeline
-on:
-  #Manually trigger workflow runs
-  workflow_dispatch:
-  #Trigger the workflow on push from the main branch
+'on':
+  workflow_dispatch: null
   push:
     branches:
       - main
 jobs:
-  #Test's job
+  ubuntu-marketplace:
+    name: Setup Postgres
+    runs-on: ubuntu-latest
+    steps:
+    # Use preinstalled PostgreSQL 
+    - name: Start PostgreSQL on Ubuntu
+      run: |
+        sudo systemctl start postgresql.service
+        pg_isready
+    # Change user name and password to meet your requirements
+    - name: Alter password default for postgres user
+      run: |
+        sudo -u postgres psql --command="ALTER USER postgres WITH PASSWORD 'admin123';" --command="\du"
+    # Change database name to meet your requirements
+    - name: Create additional database
+      run: |
+        sudo -u postgres createdb niverdb
+      #  PGPASSWORD=admin123 psql --username=postgres --host=localhost --list timetable
+    
+    # Put your steps here, e.g. checkout, build and test
+    - name: Check out code
+      uses: actions/checkout@v2 
   tests:
     name: Unit tests
-    #Run on Ubuntu using the latest version
     runs-on: ubuntu-latest
-    #Job's steps
+    needs: ubuntu-marketplace
     steps:
-      #Check-out your repository under $GITHUB_WORKSPACE, so your workflow can access it
       - uses: actions/checkout@v1
-      #Set up JDK 11
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
           java-version: '11'
-      #Set up Maven cache
       - name: Cache Maven packages
-        #This action allows caching dependencies and build outputs to improve workflow execution time.
         uses: actions/cache@v1
         with:
           path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      #Run Tests
+          key: '${{ runner.os }}-m2-${{ hashFiles(''**/pom.xml'') }}'
+          restore-keys: '${{ runner.os }}-m2'
       - name: Run Tests
         run: mvn -B test
-  
-  #Sonar's Job
   sonar:
-    #Depends on test's job
-    needs: tests
     name: SonarCloud analysis
-    #Run on Ubuntu using the latest version
     runs-on: ubuntu-latest
-    #Job's steps
+    needs: tests
     steps:
-      #Check-out your repository under $GITHUB_WORKSPACE, so your workflow can access it
       - uses: actions/checkout@v1
-      #Set up JDK 11
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
           java-version: '11'
-      #Set up SonarCloud cache
       - name: Cache SonarCloud packages
-        #This action allows caching dependencies and build outputs to improve workflow execution time.
         uses: actions/cache@v1
         with:
           path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-      #Set up Maven cache
+          key: '${{ runner.os }}-sonar'
+          restore-keys: '${{ runner.os }}-sonar'
       - name: Cache Maven packages
-        #This action allows caching dependencies and build outputs to improve workflow execution time.
         uses: actions/cache@v1
         with:
           path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      #Analyze project with SonarCloud
+          key: '${{ runner.os }}-m2-${{ hashFiles(''**/pom.xml'') }}'
+          restore-keys: '${{ runner.os }}-m2'
       - name: Analyze with SonarCloud
-        run: mvn -B verify sonar:sonar -Dsonar.projectKey=davidrezende_niver-api -Dsonar.organization=davidrezende -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
-        
+        run: >-
+          mvn -B verify sonar:sonar -Dsonar.projectKey=davidrezende_niver-api
+          -Dsonar.organization=davidrezende
+          -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+          SONAR_TOKEN: '${{ secrets.SONAR_TOKEN }}'
