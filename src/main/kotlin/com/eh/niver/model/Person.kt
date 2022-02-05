@@ -19,12 +19,12 @@ data class Person(
     @Column(name = "desc_password")
     var password: String,
     @JsonIgnore
-    @OneToMany(cascade = [CascadeType.REMOVE], mappedBy = "owner")
+    @OneToMany(cascade = [CascadeType.REMOVE], mappedBy = "owner", fetch = FetchType.EAGER)
     var groupsCreated: List<Group>? = null,
 
     @JsonIgnore
     @ManyToMany(
-        fetch = FetchType.LAZY,
+        fetch = FetchType.EAGER,
         cascade = [
             CascadeType.PERSIST,
             CascadeType.MERGE,
