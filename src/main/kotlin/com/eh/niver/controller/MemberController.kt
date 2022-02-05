@@ -57,7 +57,7 @@ class MemberController(val repository: GroupRepository, val repositoryPerson: Pe
                 owner = it.owner.idPerson,
                 members = it.members?.map { oto ->
                     ResponseMember(
-                        id = oto.idPerson,
+                        id = oto.idPerson!!,
                         name = oto.name
                     )
                 }
