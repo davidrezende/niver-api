@@ -5,32 +5,9 @@ name: CI/CD Pipeline
     branches:
       - main
 jobs:
-  ubuntu-marketplace:
-    name: Setup Postgres
-    runs-on: ubuntu-latest
-    steps:
-    # Use preinstalled PostgreSQL 
-    - name: Start PostgreSQL on Ubuntu
-      run: |
-        sudo systemctl start postgresql.service
-        pg_isready
-    # Change user name and password to meet your requirements
-    - name: Alter password default for postgres user
-      run: |
-        sudo -u postgres psql --command="ALTER USER postgres WITH PASSWORD 'admin123';" --command="\du"
-    # Change database name to meet your requirements
-    - name: Create additional database
-      run: |
-        sudo -u postgres createdb niverdb
-      #  PGPASSWORD=admin123 psql --username=postgres --host=localhost --list timetable
-    
-    # Put your steps here, e.g. checkout, build and test
-    - name: Check out code
-      uses: actions/checkout@v2 
   tests:
     name: Unit tests
     runs-on: ubuntu-latest
-    needs: ubuntu-marketplace
     steps:
       - uses: actions/checkout@v1
       - name: Set up JDK
