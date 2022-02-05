@@ -9,7 +9,7 @@ import javax.persistence.*
 data class Person(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var idPerson: Long,
+    var idPerson: Long?,
     @Column(name = "des_name")
     var name: String,
     @Column(name = "dat_birthday")

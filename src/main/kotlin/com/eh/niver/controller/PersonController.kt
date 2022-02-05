@@ -61,4 +61,15 @@ class PersonController(val repository: PersonRepository, val repositoryGroup: Gr
         return repository.deleteById(personId.toLong())
     }
 
+    fun somaERetorna4(n1: Int, n2: Int): Int{
+        val result = n1 + n2
+        return if(result == 4){
+            println("sucesso")
+            result
+        }else{
+            println("ops")
+            result
+        }
+    }
+
 }
