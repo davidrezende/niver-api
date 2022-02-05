@@ -37,7 +37,7 @@ jobs:
   #Sonar's Job
   sonar:
     #Depends on test's job
-    needs: tests
+    #needs: tests
     name: SonarCloud analysis
     #Run on Ubuntu using the latest version
     runs-on: ubuntu-latest
