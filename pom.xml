@@ -18,6 +18,7 @@
 		<kotlin.version>1.6.10</kotlin.version>
 		<sonar.organization>davidrezende</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <jacoco.version>0.8.7</jacoco.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -122,6 +123,11 @@
 						<artifactId>kotlin-maven-noarg</artifactId>
 						<version>${kotlin.version}</version>
 					</dependency>
+					<dependency>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>${jacoco.version}</version>
+                    </dependency>
 				</dependencies>
 			</plugin>
 			<plugin>
