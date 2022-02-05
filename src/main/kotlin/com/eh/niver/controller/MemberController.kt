@@ -1,5 +1,6 @@
 package com.eh.niver.controller
 
+import com.eh.niver.model.vo.RequestSaveMember
 import com.eh.niver.model.vo.ResponseGroup
 import com.eh.niver.model.vo.ResponseMember
 import com.eh.niver.repository.GroupRepository
@@ -18,11 +19,11 @@ class MemberController(val repository: GroupRepository, val repositoryPerson: Pe
     }
 
     @ApiOperation(value = "Salva uma pessoa em um grupo.")
-    @PostMapping("/savePerson/{personId}/group/{groupId}")
-    fun savePersonInGroup(@PathVariable personId: String, @PathVariable groupId: String) {
-        logger.info("Inserindo um integrante com id:$personId ao grupo: $groupId")
-        val group = repository.findById(groupId.toLong())
-        val person = repositoryPerson.findByIdPerson(personId.toLong())
+    @PostMapping()
+    fun savePersonInGroup(@RequestBody member: RequestSaveMember) {
+        logger.info("Inserindo um integrante com id:${member.idPerson} ao grupo: ${member.idGroup}")
+        val group = repository.findById(member.idGroup.toLong())
+        val person = repositoryPerson.findByIdPerson(member.idPerson.toLong())
         if (!group.isEmpty && !person.isEmpty) {
             group.get().members?.add(person.get())
         }
