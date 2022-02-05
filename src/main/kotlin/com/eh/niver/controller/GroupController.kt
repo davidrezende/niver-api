@@ -59,7 +59,7 @@ class GroupController(val repository: GroupRepository, val repositoryPerson: Per
             owner = group.get().owner.idPerson,
             members = group.get().members?.map { oto ->
                 ResponseMember(
-                    id = oto.idPerson,
+                    id = oto.idPerson!!,
                     name = oto.name
                 )
             }
