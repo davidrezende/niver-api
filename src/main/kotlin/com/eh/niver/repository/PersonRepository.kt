@@ -11,5 +11,5 @@ import java.util.*
 interface PersonRepository : JpaRepository<Person, Long> {
     fun findByEmail(email: String): Person
     fun findByBirthday(birthday: LocalDate): List<Person>
-    fun findByIdPerson( idPerson: Long): Optional<Person>
+    fun findByIdPerson(idPerson: Long): Optional<Person>
 }

@@ -6,9 +6,11 @@ import com.eh.niver.model.vo.ResponseGroup
 import com.eh.niver.model.vo.ResponseMember
 import com.eh.niver.repository.GroupRepository
 import com.eh.niver.repository.PersonRepository
+import io.swagger.annotations.ApiOperation
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.*
 
+@ApiOperation(value = "Endpoints de grupo.")
 @RestController
 @RequestMapping("group/api")
 class GroupController(val repository: GroupRepository, val repositoryPerson: PersonRepository) {
@@ -17,6 +19,7 @@ class GroupController(val repository: GroupRepository, val repositoryPerson: Per
         private val logger = LoggerFactory.getLogger(PersonController::class.java)
     }
 
+    @ApiOperation(value = "Salva um grupo.")
     @PostMapping()
     fun saveGroup(@RequestBody groupPostman: RequestSaveGroup): Group {
         logger.info("Salvando um Grupo: $groupPostman")
@@ -26,7 +29,8 @@ class GroupController(val repository: GroupRepository, val repositoryPerson: Per
             val parseGroup = Group(
                 idGroup = null,
                 name = groupPostman.name,
-                owner = person.get()
+                owner = person.get(),
+                members = mutableListOf(person.get())
             )
             return repository.save(parseGroup)
         } else {
@@ -34,12 +38,14 @@ class GroupController(val repository: GroupRepository, val repositoryPerson: Per
         }
     }
 
+    @ApiOperation(value = "Deleta um grupo.")
     @DeleteMapping("/{groupId}")
     fun deleteGroup(@PathVariable groupId: String) {
         logger.info("Deletando um Grupo: $groupId")
         return repository.deleteById(groupId.toLong())
     }
 
+    @ApiOperation(value = "Salva uma pessoa em um grupo.")
     @PostMapping("/member/{personId}/group/{groupId}")
     fun savePersonInGroup(@PathVariable personId: String, @PathVariable groupId: String) {
         logger.info("Inserindo um integrante com id:$personId ao grupo: $groupId")
@@ -51,6 +57,7 @@ class GroupController(val repository: GroupRepository, val repositoryPerson: Per
         repository.save(group.get())
     }
 
+    @ApiOperation(value = "Deleta uma pessoa de um grupo.")
     @DeleteMapping("/member/{personId}/group/{groupId}")
     fun deletePersonInGroup(@PathVariable personId: String, @PathVariable groupId: String) {
         logger.info("Deletando a pessoa:$personId do grupo:$groupId")
@@ -64,14 +71,17 @@ class GroupController(val repository: GroupRepository, val repositoryPerson: Per
         repository.save(group.get())
     }
 
-    @GetMapping("/members/groupOwner/{groupOwner}")
-    fun searchGroupByOwnerWithMembers(@PathVariable groupOwner: Long): List<ResponseGroup> {
-        val person = repositoryPerson.findByIdPerson(groupOwner)
-        val groups = repository.findGroupByOwner(person)
+    @ApiOperation(value = "Busca todos os grupos que uma pessoa é integrante.")
+    @GetMapping("/member/person/{personId}")
+    fun searchAllGroupsByPerson(@PathVariable personId: Long): List<ResponseGroup> {
+        logger.info("Procurando grupos da pessoa: $personId")
+        val person = repositoryPerson.findByIdPerson(personId)
+        val groups = repository.findByMembers(person)
         return groups.map {
             ResponseGroup(
                 name = it.name,
                 idGroup = it.idGroup,
+                owner = it.owner.idPerson,
                 members = it.members?.map { oto ->
                     ResponseMember(
                         id = oto.idPerson,
@@ -83,8 +93,10 @@ class GroupController(val repository: GroupRepository, val repositoryPerson: Per
         }
     }
 
+    @ApiOperation(value = "Busca grupo por id.")
     @GetMapping("/group/{groupId}")
-    fun searchGroupByOwnerWithMembers(@PathVariable groupId: String): ResponseGroup {
+    fun searchGroupById(@PathVariable groupId: String): ResponseGroup {
+        logger.info("Procurando o grupo : $groupId")
         val group = repository.findById(groupId.toLong())
         if (group.isEmpty) {
             throw Exception("Group does not exist!")
@@ -100,7 +112,9 @@ class GroupController(val repository: GroupRepository, val repositoryPerson: Per
                 )
             }
         )
+    }
 
+    @ApiOperation(value = "Atualiza um grupo.")
     @PutMapping()
     fun updateGroup(@RequestBody groupPostman: RequestSaveGroup): Group {
         logger.info("Alterando um Grupo: $groupPostman")
@@ -119,3 +133,4 @@ class GroupController(val repository: GroupRepository, val repositoryPerson: Per
 
     }
 }
+
