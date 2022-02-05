@@ -20,6 +20,16 @@ jobs:
         run: |
           sleep 1m
           psql -U postgres -d postgres -h localhost -c "SELECT version()"
+      - name: Wait / Sleep
+        uses: jakejarvis/wait-action@v0.1.0
+        with:
+          time: '10s'
+   
+      - name: Collect Docker Logs
+        uses: jwalton/gh-docker-logs@v1.0.0
+   
+      - name: Check running containers
+        run: docker ps -a    
   tests:
     name: Unit tests
     runs-on: ubuntu-latest
