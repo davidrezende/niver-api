@@ -1,75 +1,69 @@
-#Workflow name
 name: CI/CD Pipeline
-on:
-  #Manually trigger workflow runs
-  workflow_dispatch:
-  #Trigger the workflow on push from the main branch
+'on':
+  workflow_dispatch: null
   push:
     branches:
       - main
 jobs:
-  #Test's job
+  ubuntu-marketplace:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Setup PostgreSQL
+        uses: Harmon758/postgresql-action@v1.0.0
+        with:
+          postgresql version: '11'
+          postgresql db: niverdb
+          postgresql user: postgres
+      - name: Check Postgres running
+        run: |
+          sleep 1m
+          psql -U postgres -d postgres -h localhost -c "SELECT version()"
   tests:
     name: Unit tests
-    #Run on Ubuntu using the latest version
     runs-on: ubuntu-latest
-    #Job's steps
+    needs: ubuntu-marketplace
     steps:
-      #Check-out your repository under $GITHUB_WORKSPACE, so your workflow can access it
       - uses: actions/checkout@v1
-      #Set up JDK 11
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
           java-version: '11'
-      #Set up Maven cache
       - name: Cache Maven packages
-        #This action allows caching dependencies and build outputs to improve workflow execution time.
         uses: actions/cache@v1
         with:
           path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      #Run Tests
+          key: '${{ runner.os }}-m2-${{ hashFiles(''**/pom.xml'') }}'
+          restore-keys: '${{ runner.os }}-m2'
       - name: Run Tests
         run: mvn -B test
-  
-  #Sonar's Job
   sonar:
-    #Depends on test's job
-    #needs: tests
     name: SonarCloud analysis
-    #Run on Ubuntu using the latest version
     runs-on: ubuntu-latest
-    #Job's steps
     steps:
-      #Check-out your repository under $GITHUB_WORKSPACE, so your workflow can access it
       - uses: actions/checkout@v1
-      #Set up JDK 11
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
           java-version: '11'
-      #Set up SonarCloud cache
       - name: Cache SonarCloud packages
-        #This action allows caching dependencies and build outputs to improve workflow execution time.
         uses: actions/cache@v1
         with:
           path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-      #Set up Maven cache
+          key: '${{ runner.os }}-sonar'
+          restore-keys: '${{ runner.os }}-sonar'
       - name: Cache Maven packages
-        #This action allows caching dependencies and build outputs to improve workflow execution time.
         uses: actions/cache@v1
         with:
           path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      #Analyze project with SonarCloud
+          key: '${{ runner.os }}-m2-${{ hashFiles(''**/pom.xml'') }}'
+          restore-keys: '${{ runner.os }}-m2'
       - name: Analyze with SonarCloud
-        run: mvn -B verify sonar:sonar -Dsonar.projectKey=davidrezende_niver-api -Dsonar.organization=davidrezende -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
-        
+        run: >-
+          mvn -B verify sonar:sonar -Dsonar.projectKey=davidrezende_niver-api
+          -Dsonar.organization=davidrezende
+          -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+          SONAR_TOKEN: '${{ secrets.SONAR_TOKEN }}'
