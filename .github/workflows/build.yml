@@ -21,8 +21,8 @@ jobs:
     # Change database name to meet your requirements
     - name: Create additional database
       run: |
-        sudo -u postgres createdb --owner=postgres niverdb
-        PGPASSWORD=admin123 psql --username=postgres --host=localhost --list timetable
+        sudo -u postgres createdb niverdb
+      #  PGPASSWORD=admin123 psql --username=postgres --host=localhost --list timetable
     
     # Put your steps here, e.g. checkout, build and test
     - name: Check out code
