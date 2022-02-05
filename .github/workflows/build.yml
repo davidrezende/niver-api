@@ -6,6 +6,7 @@ name: CI/CD Pipeline
       - main
 jobs:
   ubuntu-marketplace:
+    name: Setup Postgres
     runs-on: ubuntu-latest
     steps:
     # Use preinstalled PostgreSQL 
@@ -14,9 +15,9 @@ jobs:
         sudo systemctl start postgresql.service
         pg_isready
     # Change user name and password to meet your requirements
-    - name: Create additional user
+    - name: Alter password default for postgres user
       run: |
-        sudo -u postgres psql --command="CREATE USER postgres PASSWORD 'admin123'" --command="\du"
+        sudo -u postgres psql --command="ALTER USER postgres WITH PASSWORD 'admin123';" --command="\du"
     # Change database name to meet your requirements
     - name: Create additional database
       run: |
