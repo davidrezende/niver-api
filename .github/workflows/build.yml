@@ -1,36 +1,14 @@
 name: CI/CD Pipeline
 'on':
-  workflow_dispatch: null
+  workflow_dispatch:
   push:
     branches:
       - main
+      - develop
 jobs:
-  ubuntu-marketplace:
-    name: Setup Postgres
-    runs-on: ubuntu-latest
-    steps:
-    # Use preinstalled PostgreSQL 
-    - name: Start PostgreSQL on Ubuntu
-      run: |
-        sudo systemctl start postgresql.service
-        pg_isready
-    # Change user name and password to meet your requirements
-    - name: Alter password default for postgres user
-      run: |
-        sudo -u postgres psql --command="ALTER USER postgres WITH PASSWORD 'admin123';" --command="\du"
-    # Change database name to meet your requirements
-    - name: Create additional database
-      run: |
-        sudo -u postgres createdb niverdb
-      #  PGPASSWORD=admin123 psql --username=postgres --host=localhost --list timetable
-    
-    # Put your steps here, e.g. checkout, build and test
-    - name: Check out code
-      uses: actions/checkout@v2 
   tests:
-    name: Unit tests
+    name: Unit Tests
     runs-on: ubuntu-latest
-    needs: ubuntu-marketplace
     steps:
       - uses: actions/checkout@v1
       - name: Set up JDK
@@ -46,7 +24,7 @@ jobs:
       - name: Run Tests
         run: mvn -B test
   sonar:
-    name: SonarCloud analysis
+    name: SonarCloud Analysis
     runs-on: ubuntu-latest
     needs: tests
     steps:
@@ -75,3 +53,29 @@ jobs:
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
           SONAR_TOKEN: '${{ secrets.SONAR_TOKEN }}'
+
+  build:
+    needs: sonar
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      #Check-out your repository under $GITHUB_WORKSPACE, so your workflow can access it
+      - uses: actions/checkout@v1
+      #Set up JDK 11
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: '11'
+      #Set up Maven cache
+      - name: Cache Maven packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      #Analyze project with SonarCloud
+      - name: Analyze with SonarCloud
+        run: mvn -B verify sonar:sonar -Dsonar.projectKey=davidrezende_niver-api -Dsonar.organization=davidrezende -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
