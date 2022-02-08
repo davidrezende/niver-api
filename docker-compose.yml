@@ -13,7 +13,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=admin1234
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - SPRING_FLYWAY_ENABLED=false
+      - SPRING_FLYWAY_ENABLED=true
       - SPRING_FLYWAY_USER=postgres
       - SPRING_FLYWAY_PASSWORD=admin1234
       - SPRING_FLYWAY_SCHEMAS=niverdb
@@ -25,7 +25,7 @@ services:
     container_name: pg_container
     image: postgres
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - db-data:/var/lib/postgresql/data
     restart: always
     environment:
       POSTGRES_DB: niverdb
@@ -43,3 +43,6 @@ services:
       PGADMIN_DEFAULT_PASSWORD: root
     ports:
       - "5050:80"
+
+volumes:
+  db-data:

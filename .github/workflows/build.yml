@@ -87,3 +87,16 @@ jobs:
           source: "/home/runner/work/niver-api/niver-api/target/niver-api-SNAPSHOT.jar"
           strip_components: 2
           target: "/home/niver/niver-api"
+      - name: Rebuild Docker-Compose
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          passphrase: ${{ secrets.SSH_PASSWORD }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          scripts: |
+            cd /home/niver/niver-api
+            docker-compose down
+            docker-compose rm
+            docker-compose up -d --build
