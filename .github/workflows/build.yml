@@ -81,8 +81,10 @@ jobs:
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
-          password: ${{ secrets.SSH_KEY }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           source: "/home/runner/work/niver-api/niver-api/target/niver-api-SNAPSHOT.jar"
           strip_components: 2
           target: "/home/niver/niver-api/target"
+          
