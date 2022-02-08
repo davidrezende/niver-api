@@ -15,14 +15,30 @@ class PersonServiceImpl(val repository: PersonRepository): PersonService {
         private val logger = LoggerFactory.getLogger(PersonServiceImpl::class.java)
     }
 
-    override fun getPersonById(idPerson: Long): Optional<Person> {
-        return repository.findByIdPerson(idPerson)
+    override fun getPersonById(idPerson: Long): Person {
+        val person = repository.findByIdPerson(idPerson)
+        if(person.isEmpty){
+            throw Exception("Pessoa não encontrada.")
+        }
+        return person.get()
     }
 
     override fun getBirthdaysToday(): List<Person>? {
         logger.info("M=getBirthdaysToday msg=Buscando aniversariantes do dia")
         val today = LocalDate.now()
         return repository.findByBirthdaysForToday(today)
+    }
+
+    override fun getPersonByEmail(email: String): Person {
+        return repository.findByEmail(email)
+    }
+
+    override fun savePerson(person: Person): Person {
+        return repository.save(person)
+    }
+
+    override fun deletePerson(personId: String) {
+        return repository.deleteById(personId.toLong())
     }
 
 }
