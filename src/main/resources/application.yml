@@ -1,6 +1,6 @@
 spring:
   jpa:
-    generate-ddl: 'true'
+    generate-ddl: 'false'
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
   mail:
@@ -27,7 +27,6 @@ spring:
   flyway:
     enabled: false
     url: jdbc:postgresql://localhost:5432/niverdb
-    schemas: niverdb
     user: postgres
     password: admin123
     locations: "classpath:db/migration"
