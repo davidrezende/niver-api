@@ -1,0 +1,36 @@
+spring:
+  jpa:
+    generate-ddl: 'true'
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  mail:
+    host: smtp.gmail.com
+    username: ALTERAR
+    port: '587'
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: 'true'
+          auth: 'true'
+    password: ALTERAR
+
+  datasource:
+    password: admin123
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/niverdb
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+  flyway:
+    enabled: true
+    url: jdbc:postgresql://localhost:5432/niverdb
+    schemas: niverdb
+    user: postgres
+    password: admin123
+    locations: "classpath:db/migration"
+
+server:
+  port: '8090'
