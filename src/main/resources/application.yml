@@ -25,7 +25,7 @@ spring:
       matching-strategy: ant_path_matcher
 
   flyway:
-    enabled: true
+    enabled: false
     url: jdbc:postgresql://localhost:5432/niverdb
     schemas: niverdb
     user: postgres
