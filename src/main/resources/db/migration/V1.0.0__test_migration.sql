@@ -1,0 +1,1 @@
+insert into tb_person(des_name, dat_birthday, des_email, desc_password) values ('TesteMigration', '1997-04-12', 'test@gmail.com', 'asasdas');

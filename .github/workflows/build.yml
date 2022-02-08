@@ -87,4 +87,3 @@ jobs:
           source: "/home/runner/work/niver-api/niver-api/target/niver-api-SNAPSHOT.jar"
           strip_components: 2
           target: "/home/niver/niver-api"
-          
