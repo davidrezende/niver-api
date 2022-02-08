@@ -9,8 +9,8 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.eh</groupId>
-	<artifactId>niver</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>niver-api</artifactId>
+	<version>SNAPSHOT</version>
 	<name>niver</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
