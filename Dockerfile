@@ -1,3 +1,3 @@
 FROM openjdk:11
-ADD target/niver-0.0.1-SNAPSHOT.jar niver-0.0.1-SNAPSHOT.jar
-ENTRYPOINT ["java", "-jar", "niver-0.0.1-SNAPSHOT.jar"]
+ADD target/niver-api-SNAPSHOT.jar niver-api-SNAPSHOT.jar
+ENTRYPOINT ["java", "-jar", "niver-api-SNAPSHOT.jar"]
