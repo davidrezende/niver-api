@@ -20,7 +20,7 @@ class PersonController(val personService: PersonService) {
 
     @ApiOperation(value = "Procura pessoa por Id.")
     @GetMapping("/id/{idPerson}")
-    fun searchPersonById(@PathVariable idPerson: Long): Optional<Person> {
+    fun searchPersonById(@PathVariable idPerson: Long):Person {
         logger.info("Procurando pessoa por ID: $idPerson")
         return personService.getPersonById(idPerson)
     }
