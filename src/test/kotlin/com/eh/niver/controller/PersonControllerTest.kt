@@ -5,18 +5,16 @@ import com.eh.niver.repository.PersonRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import jdk.nashorn.internal.ir.annotations.Ignore
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 
-
 class PersonControllerTest {
     private val personRepository: PersonRepository = mockk()
     private val controller: PersonController = mockk()
-    @Ignore
-    @DisplayName("save person with sucess")
+
+    /*@DisplayName("save person with sucess")
     fun savePerson_thenReturnSucess() {
 
         val personMockRequest = Person(
@@ -43,7 +41,7 @@ class PersonControllerTest {
         //then
         verify(exactly = 1) { personRepository.save(personMockRequest) };
         assertEquals(personMockReturn, result)
-    }
+    }*/
 
     @Test
     fun somaERetorna4_thenReturn4(){
