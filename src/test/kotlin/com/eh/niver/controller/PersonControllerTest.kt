@@ -43,31 +43,31 @@ class PersonControllerTest {
         assertEquals(personMockReturn, result)
     }*/
 
-    @Test
-    fun somaERetorna4_thenReturn4(){
-        val n1 = 2
-        val n2 = 2
-        every { controller.somaERetorna4(n1, n2) } returns 4;
-
-        //when
-        val result = controller.somaERetorna4(n1, n2);
-
-        //then
-        verify(exactly = 1) { controller.somaERetorna4(n1, n2) };
-        assertEquals(4, result)
-    }
-
-    @Test
-    fun somaERetorna4_thenReturnDifferent4(){
-        val n1 = 3
-        val n2 = 2
-        every { controller.somaERetorna4(n1, n2) } returns 5;
-
-        //when
-        val result = controller.somaERetorna4(n1, n2);
-
-        //then
-        verify(exactly = 1) { controller.somaERetorna4(n1, n2) };
-        assertEquals(5, result)
-    }
+//    @Test
+//    fun somaERetorna4_thenReturn4(){
+//        val n1 = 2
+//        val n2 = 2
+//        every { controller.somaERetorna4(n1, n2) } returns 4;
+//
+//        //when
+//        val result = controller.somaERetorna4(n1, n2);
+//
+//        //then
+//        verify(exactly = 1) { controller.somaERetorna4(n1, n2) };
+//        assertEquals(4, result)
+//    }
+//
+//    @Test
+//    fun somaERetorna4_thenReturnDifferent4(){
+//        val n1 = 3
+//        val n2 = 2
+//        every { controller.somaERetorna4(n1, n2) } returns 5;
+//
+//        //when
+//        val result = controller.somaERetorna4(n1, n2);
+//
+//        //then
+//        verify(exactly = 1) { controller.somaERetorna4(n1, n2) };
+//        assertEquals(5, result)
+//    }
 }

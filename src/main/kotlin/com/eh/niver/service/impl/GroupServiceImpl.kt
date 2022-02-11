@@ -19,6 +19,7 @@ class GroupServiceImpl(val repository: GroupRepository, val personService: Perso
     }
 
     override fun saveGroup(group: RequestSaveGroup): Group {
+        logger.info("Salvando um Grupo : $group")
         val person = personService.getPersonById(group.idOwner.toLong())
         logger.info("Pessoa encontrada pelo id: ${group.idOwner}")
         val parseGroup = Group(
@@ -31,10 +32,12 @@ class GroupServiceImpl(val repository: GroupRepository, val personService: Perso
     }
 
     override fun deleteGroup(groupId: String) {
+        logger.info("Deletando um Grupo: $groupId")
         return repository.deleteById(groupId.toLong())
     }
 
     override fun getGroupById(groupId: String): ResponseGroup {
+        logger.info("Procurando o grupo : $groupId")
         val group = repository.findById(groupId.toLong())
         if (group.isEmpty) {
             throw Exception("Group does not exist!")
@@ -53,17 +56,42 @@ class GroupServiceImpl(val repository: GroupRepository, val personService: Perso
     }
 
     override fun updateGroup(group: RequestSaveGroup): Group {
+        logger.info("Alterando um Grupo: $group")
         val person = personService.getPersonById(group.idOwner.toLong())
         logger.info("Pessoa encontrada pelo id: ${group.idOwner}")
+        val grupo = repository.findById(group.idGroup)
+        logger.info("Grupo encontrado pelo id: ${group.idGroup}")
         val parseGroup = Group(
             idGroup = group.idGroup,
             name = group.name,
-            owner = person
+            owner = person,
+            members = grupo.get().members
         )
         return repository.save(parseGroup)
     }
 
+    override fun searchAllGroupsByMember(personId: Long): List<ResponseGroup> {
+        logger.info("Procurando grupos da pessoa: $personId")
+        val person = personService.getPersonById(personId)
+        val groups = repository.findByMembers(person)
+        return groups.map {
+            ResponseGroup(
+                name = it.name,
+                idGroup = it.idGroup,
+                owner = it.owner.idPerson,
+                members = it.members?.map { oto ->
+                    ResponseMember(
+                        id = oto.idPerson!!,
+                        name = oto.name
+                    )
+                }
+            )
+
+        }
+    }
+
     override fun saveMemberInGroup(member: RequestSaveMember) {
+        logger.info("Salvando a pessoa: ${member.idPerson} no grupo: ${member.idGroup}")
         val group = repository.findById(member.idGroup)
         val person = personService.getPersonById(member.idPerson)
         if (!group.isEmpty) {
@@ -71,5 +99,18 @@ class GroupServiceImpl(val repository: GroupRepository, val personService: Perso
         }
         repository.save(group.get())
     }
+
+    override fun deleteMemberInGroup(idPerson: String, idGroup: String) {
+        logger.info("Deletando a pessoa:$idPerson do grupo:$idGroup")
+        val group = repository.findById(idGroup.toLong())
+        if (group.isEmpty) {
+            throw Exception("Grupo não existe!")
+        }
+        group.get().members?.remove(
+            group.get().members!!.first { it.idPerson == idPerson.toLong() }
+        )
+        repository.save(group.get())
+    }
+
 
 }

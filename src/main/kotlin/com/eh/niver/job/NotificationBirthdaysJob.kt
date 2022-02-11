@@ -23,4 +23,11 @@ class NotificationBirthdaysJob(val notificationService: NotificationService) {
         notificationService.notificateBirthdaysToday()
         logger.info("M=notificationBirthdays msg=end at ${LocalDateTime.now()}")
     }
+
+    @Async
+    @Scheduled(cron = "0 58 19 ? * *")
+    fun algumacoisa(){
+        println("haru é gostoso, para bastante.")
+    }
+
 }

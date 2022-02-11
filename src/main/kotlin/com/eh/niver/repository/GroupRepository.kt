@@ -9,5 +9,5 @@ import java.util.*
 @Repository
 interface GroupRepository : JpaRepository<Group, Long> {
     fun findGroupByOwner(owner: Optional<Person>): List<Group>
-    fun findByMembers(person: Optional<Person>): List<Group>
+    fun findByMembers(person: Person): List<Group>
 }
