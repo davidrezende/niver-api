@@ -24,7 +24,7 @@ data class Person(
 
     @JsonIgnore
     @ManyToMany(
-        fetch = FetchType.EAGER,
+        fetch = FetchType.LAZY,
         cascade = [
             CascadeType.PERSIST,
             CascadeType.MERGE,
