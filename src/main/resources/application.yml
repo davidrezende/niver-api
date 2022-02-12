@@ -25,11 +25,13 @@ spring:
       matching-strategy: ant_path_matcher
 
   flyway:
-    enabled: false
+    enabled: true
     url: jdbc:postgresql://localhost:5432/niverdb
+    schemas: public
     user: postgres
     password: admin123
     locations: "classpath:db/migration"
+    baselineOnMigrate: 'true'
 
 server:
   port: '8090'
