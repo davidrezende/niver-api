@@ -17,6 +17,7 @@ class PersonController(val personService: PersonService) {
         private val logger = LoggerFactory.getLogger(PersonController::class.java)
     }
 
+    @CrossOrigin
     @ApiOperation(value = "Procura pessoa por Id.")
     @GetMapping("/id/{idPerson}")
     fun searchPersonById(@PathVariable idPerson: Long): Person {

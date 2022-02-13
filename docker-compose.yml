@@ -12,11 +12,11 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/niverdb
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=admin1234
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
       - SPRING_FLYWAY_ENABLED=true
       - SPRING_FLYWAY_USER=postgres
       - SPRING_FLYWAY_PASSWORD=admin1234
-      - SPRING_FLYWAY_SCHEMAS=niverdb
+      - SPRING_FLYWAY_SCHEMAS=public
       - SPRING_FLYWAY_URL=jdbc:postgresql://db:5432/niverdb
     ports:
       - "8090:8090"

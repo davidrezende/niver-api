@@ -1,6 +1,6 @@
 spring:
   jpa:
-    generate-ddl: 'true'
+    generate-ddl: 'false'
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: 'true'
     properties:
@@ -29,12 +29,13 @@ spring:
       matching-strategy: ant_path_matcher
 
   flyway:
-    enabled: false
+    enabled: true
     url: jdbc:postgresql://localhost:5432/niverdb
-    schemas: niverdb
+    schemas: public
     user: postgres
     password: 992120ogaiht
     locations: "classpath:db/migration"
+    baselineOnMigrate: 'true'
 
 server:
   port: '8090'
