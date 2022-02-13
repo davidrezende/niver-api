@@ -28,6 +28,7 @@ class MemberController(val memberService: MemberService) {
         memberService.deleteMemberInGroup(personId, groupId)
     }
 
+    @CrossOrigin
     @ApiOperation(value = "Busca todos os grupos que uma pessoa é integrante.")
     @GetMapping("/searchGroup/person/{personId}")
     fun searchAllGroupsByPerson(@PathVariable personId: Long): List<ResponseGroup> {

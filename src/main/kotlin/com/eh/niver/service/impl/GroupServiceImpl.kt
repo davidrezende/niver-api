@@ -20,8 +20,8 @@ class GroupServiceImpl(val repository: GroupRepository, val personService: Perso
 
     override fun saveGroup(group: RequestSaveGroup): Group {
         logger.info("Salvando um Grupo : $group")
-        val person = personService.getPersonById(group.idOwner.toLong())
-        logger.info("Pessoa encontrada pelo id: ${group.idOwner}")
+        val person = personService.getPersonById(group.owner.toLong())
+        logger.info("Pessoa encontrada pelo id: ${group.owner}")
         val parseGroup = Group(
             idGroup = null,
             name = group.name,
@@ -57,8 +57,8 @@ class GroupServiceImpl(val repository: GroupRepository, val personService: Perso
 
     override fun updateGroup(group: RequestSaveGroup): Group {
         logger.info("Alterando um Grupo: $group")
-        val person = personService.getPersonById(group.idOwner.toLong())
-        logger.info("Pessoa encontrada pelo id: ${group.idOwner}")
+        val person = personService.getPersonById(group.owner.toLong())
+        logger.info("Pessoa encontrada pelo id: ${group.owner}")
         val grupo = repository.findById(group.idGroup)
         logger.info("Grupo encontrado pelo id: ${group.idGroup}")
         val parseGroup = Group(
