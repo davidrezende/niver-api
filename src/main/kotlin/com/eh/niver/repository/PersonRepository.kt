@@ -1,6 +1,5 @@
 package com.eh.niver.repository
 
-import com.eh.niver.model.Group
 import com.eh.niver.model.Person
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
@@ -34,4 +33,7 @@ interface PersonRepository : JpaRepository<Person, Long> {
     fun findByBirthdaysForToday(birthday: LocalDate): List<Person>
     fun findByIdPerson( idPerson: Long): Optional<Person>
     fun findByBirthday(birthday: LocalDate): List<Person>
+
+    @Query("select p from Person p where month(p.birthday) = month(CURRENT_DATE)")
+    fun findByMonthlyBirthdays(): List<Person>?
 }
