@@ -22,6 +22,7 @@ class MemberController(val memberService: MemberService) {
         memberService.saveMemberInGroup(member)
     }
 
+    @CrossOrigin
     @ApiOperation(value = "Deleta uma pessoa de um grupo.")
     @DeleteMapping("/deletePerson/{personId}/group/{groupId}")
     fun deletePersonInGroup(@PathVariable personId: String, @PathVariable groupId: String) {

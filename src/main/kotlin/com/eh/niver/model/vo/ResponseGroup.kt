@@ -4,5 +4,5 @@ data class ResponseGroup(
     var name: String,
     var idGroup: Long?,
     var members: List<ResponseMember>? = null,
-    var owner: Long? = null
+    var owner: ResponseMember? = null
 )

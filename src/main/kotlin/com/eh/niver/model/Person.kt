@@ -18,9 +18,11 @@ data class Person(
     var email: String,
     @Column(name = "desc_password")
     var password: String,
+
+){
     @JsonIgnore
     @OneToMany(cascade = [CascadeType.REMOVE], mappedBy = "owner", fetch = FetchType.EAGER)
-    var groupsCreated: List<Group>? = null,
+    var groupsCreated: List<Group>? = null
 
     @JsonIgnore
     @ManyToMany(
@@ -52,4 +54,4 @@ data class Person(
         inverseForeignKey = ForeignKey(value = ConstraintMode.CONSTRAINT)
     )
     var groups: List<Group>? = null
-)
+}

@@ -8,7 +8,7 @@ import javax.persistence.*
 data class Group(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var idGroup: Long?,
+    val idGroup: Long?,
     @Column(name = "des_name")
     var name: String,
 
@@ -16,7 +16,7 @@ data class Group(
     @JoinColumn(name = "id_owner")
     var owner: Person,
 
-    @JsonIgnore
+//    @JsonIgnore
     @ManyToMany(
         fetch = FetchType.LAZY,
         cascade = [

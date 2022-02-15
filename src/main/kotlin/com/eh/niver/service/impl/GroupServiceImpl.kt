@@ -20,14 +20,15 @@ class GroupServiceImpl(val repository: GroupRepository, val personService: Perso
 
     override fun saveGroup(group: RequestSaveGroup): Group {
         logger.info("Salvando um Grupo : $group")
-        val person = personService.getPersonById(group.owner.toLong())
-        logger.info("Pessoa encontrada pelo id: ${group.owner}")
+        val person = personService.getPersonById(group.owner.idPerson)
+        logger.info("Pessoa encontrada pelo id: ${group.owner.idPerson} - pessoa: $person")
         val parseGroup = Group(
             idGroup = null,
             name = group.name,
             owner = person,
             members = mutableListOf(person)
         )
+        logger.info("grupo a ser salvo: $parseGroup")
         return repository.save(parseGroup)
     }
 
@@ -45,10 +46,13 @@ class GroupServiceImpl(val repository: GroupRepository, val personService: Perso
         return ResponseGroup(
             idGroup = group.get().idGroup,
             name = group.get().name,
-            owner = group.get().owner.idPerson,
+            owner = ResponseMember(
+                idPerson = group.get().owner.idPerson!!,
+                name = group.get().owner.name
+            ),
             members = group.get().members?.map { oto ->
                 ResponseMember(
-                    id = oto.idPerson!!,
+                    idPerson = oto.idPerson!!,
                     name = oto.name
                 )
             }
@@ -57,9 +61,9 @@ class GroupServiceImpl(val repository: GroupRepository, val personService: Perso
 
     override fun updateGroup(group: RequestSaveGroup): Group {
         logger.info("Alterando um Grupo: $group")
-        val person = personService.getPersonById(group.owner.toLong())
+        val person = personService.getPersonById(group.owner.idPerson)
         logger.info("Pessoa encontrada pelo id: ${group.owner}")
-        val grupo = repository.findById(group.idGroup)
+        val grupo = repository.findById(group.idGroup!!)
         logger.info("Grupo encontrado pelo id: ${group.idGroup}")
         val parseGroup = Group(
             idGroup = group.idGroup,
@@ -78,10 +82,13 @@ class GroupServiceImpl(val repository: GroupRepository, val personService: Perso
             ResponseGroup(
                 name = it.name,
                 idGroup = it.idGroup,
-                owner = it.owner.idPerson,
+                owner = ResponseMember(
+                        idPerson = it.owner.idPerson!!,
+                        name = it.owner.name
+                ),
                 members = it.members?.map { oto ->
                     ResponseMember(
-                        id = oto.idPerson!!,
+                        idPerson = oto.idPerson!!,
                         name = oto.name
                     )
                 }
