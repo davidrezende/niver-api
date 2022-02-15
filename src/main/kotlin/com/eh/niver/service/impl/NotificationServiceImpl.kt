@@ -31,7 +31,8 @@ class NotificationServiceImpl(
         val birthdays = personService.getBirthdaysToday()
         logger.info("Lista de aniversariantes: $birthdays")
         birthdays?.forEach {
-            sendNotificationByPersonId(it.idPerson!!)
+            println(it.groups)
+//            sendNotificationByPersonId(it.idPerson!!)
         }
     }
 

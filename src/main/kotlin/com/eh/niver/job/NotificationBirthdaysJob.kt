@@ -6,6 +6,7 @@ import org.springframework.scheduling.annotation.Async
 import org.springframework.scheduling.annotation.EnableAsync
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
 @Component
@@ -17,7 +18,8 @@ class NotificationBirthdaysJob(val notificationService: NotificationService) {
     }
 
     @Async
-//    @Scheduled(fixedRate = 60000, initialDelay = 5000)
+    @Scheduled(fixedRate = 60000, initialDelay = 5000)
+    @Transactional
     fun notificationBirthdays(){
         logger.info("M=notificationBirthdays msg=init at ${LocalDateTime.now()}")
         notificationService.notificateBirthdaysToday()
