@@ -1,6 +1,7 @@
 package com.eh.niver.service.impl
 
 import com.eh.niver.model.Group
+import com.eh.niver.model.Person
 import com.eh.niver.model.vo.RequestSaveGroup
 import com.eh.niver.model.vo.RequestSaveMember
 import com.eh.niver.model.vo.ResponseGroup
@@ -88,6 +89,10 @@ class GroupServiceImpl(val repository: GroupRepository, val personService: Perso
             )
 
         }
+    }
+
+    override fun searchAllMembersByGroup(groupId: Long): MutableList<Person>? {
+        return repository.findById(groupId).get().members
     }
 
     override fun saveMemberInGroup(member: RequestSaveMember) {

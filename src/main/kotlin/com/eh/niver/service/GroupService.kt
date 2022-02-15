@@ -5,7 +5,6 @@ import com.eh.niver.model.Person
 import com.eh.niver.model.vo.RequestSaveGroup
 import com.eh.niver.model.vo.RequestSaveMember
 import com.eh.niver.model.vo.ResponseGroup
-import java.util.*
 
 interface GroupService {
     fun saveGroup(group: RequestSaveGroup): Group
@@ -15,4 +14,5 @@ interface GroupService {
     fun saveMemberInGroup(member: RequestSaveMember)
     fun deleteMemberInGroup(idPerson: String, idGroup: String)
     fun searchAllGroupsByMember(personId: Long): List<ResponseGroup>
+    fun searchAllMembersByGroup(groupId: Long): MutableList<Person>?
 }

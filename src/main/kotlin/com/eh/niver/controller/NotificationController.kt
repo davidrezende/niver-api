@@ -1,8 +1,8 @@
 package com.eh.niver.controller
 
 import com.eh.niver.model.vo.RequestSendEmail
+import com.eh.niver.service.GroupService
 import com.eh.niver.service.NotificationService
-import com.eh.niver.service.PersonService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.web.bind.annotation.*
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("notification/api")
 class NotificationController(
     val notificationService: NotificationService,
-    val personService: PersonService
+    val groupService: GroupService
 ) {
 
     @ApiOperation(value = "Envia um email de teste.")
@@ -24,4 +24,16 @@ class NotificationController(
             throw e
         }
     }
+
+    @ApiOperation(value = "Envia um email de teste.")
+    @GetMapping("/send/group")
+    fun sendEmailToGroup() {
+        try {
+            notificationService.notificateBirthdaysToday()
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
+
 }
