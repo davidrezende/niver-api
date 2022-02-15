@@ -5,6 +5,7 @@ import com.eh.niver.model.Person
 import com.eh.niver.model.vo.EmailVO
 import com.eh.niver.service.EmailService
 import com.eh.niver.service.GroupService
+import com.eh.niver.repository.PersonRepository
 import com.eh.niver.service.NotificationService
 import com.eh.niver.service.PersonService
 import org.slf4j.LoggerFactory
@@ -15,7 +16,7 @@ import java.time.LocalDate
 class NotificationServiceImpl(
     private val personService: PersonService,
     private val emailService: EmailService,
-    private val groupService: GroupService
+    private val personRepository: PersonRepository
 ) : NotificationService {
 
     companion object {
@@ -45,6 +46,14 @@ class NotificationServiceImpl(
     private fun sendEmailToGroup(birthdays: List<Person>, group: Group) {
         group.members?.filterNot { birthdays.map { it.idPerson } == listOf(it.idPerson) }?.forEach {
             sendNotificationByPersonId(it.idPerson!!)
+        }
+    }
+
+    override fun notificateMonthlyBirthdays() {
+        //colocar camada de service de person
+        val birthdaysMonthly = personRepository.findByMonthlyBirthdays()
+        birthdaysMonthly?.forEach {
+            println(it.name)
         }
     }
 
