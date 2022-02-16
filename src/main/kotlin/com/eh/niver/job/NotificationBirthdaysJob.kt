@@ -13,7 +13,7 @@ import java.time.LocalDateTime
 @EnableAsync
 class NotificationBirthdaysJob(val notificationService: NotificationService) {
 
-    companion object {
+    companion object{
         private val logger = LoggerFactory.getLogger(NotificationBirthdaysJob::class.java)
     }
 
