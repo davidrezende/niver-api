@@ -16,7 +16,7 @@ class ExceptionHandlingController {
 
     @ExceptionHandler(
         value = [EntityNotFoundException::class,
-            EmptyResultDataAccessException::class
+            EmptyResultDataAccessException::class,
         ]
     )
     fun handleEntityNotFound(ex: Exception, request: WebRequest): ResponseEntity<ErrorsDetails> {
@@ -34,6 +34,16 @@ class ExceptionHandlingController {
         val errorDetails = ErrorsDetails(
             Date(),
             "Invalid parameters",
+            ex.message!!
+        )
+        return ResponseEntity(errorDetails, HttpStatus.BAD_REQUEST)
+    }
+
+    @ExceptionHandler(value = [(GroupNotFoundException::class)])
+    fun handleGroupNotFoundException(ex: GroupNotFoundException, request: WebRequest): ResponseEntity<ErrorsDetails> {
+        val errorDetails = ErrorsDetails(
+            Date(),
+            "Group not found",
             ex.message!!
         )
         return ResponseEntity(errorDetails, HttpStatus.BAD_REQUEST)

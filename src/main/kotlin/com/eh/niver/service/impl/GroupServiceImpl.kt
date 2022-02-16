@@ -1,5 +1,6 @@
 package com.eh.niver.service.impl
 
+import com.eh.niver.exception.handling.GroupNotFoundException
 import com.eh.niver.model.Group
 import com.eh.niver.model.vo.RequestSaveGroup
 import com.eh.niver.model.vo.RequestSaveMember
@@ -41,7 +42,7 @@ class GroupServiceImpl(val repository: GroupRepository, val personService: Perso
         logger.info("Procurando o grupo : $groupId")
         val group = repository.findById(groupId.toLong())
         if (group.isEmpty) {
-            throw Exception("Group does not exist!")
+            throw GroupNotFoundException("Group $groupId does not exist!")
         }
         return ResponseGroup(
             idGroup = group.get().idGroup,
