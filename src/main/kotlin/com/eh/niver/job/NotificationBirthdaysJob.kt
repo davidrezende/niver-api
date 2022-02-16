@@ -13,23 +13,16 @@ import java.time.LocalDateTime
 @EnableAsync
 class NotificationBirthdaysJob(val notificationService: NotificationService) {
 
-    companion object{
+    companion object {
         private val logger = LoggerFactory.getLogger(NotificationBirthdaysJob::class.java)
     }
 
     @Async
     @Scheduled(fixedRate = 60000, initialDelay = 5000)
     @Transactional
-    fun notificationBirthdays(){
+    fun notificationBirthdays() {
         logger.info("M=notificationBirthdays msg=init at ${LocalDateTime.now()}")
         notificationService.notificateBirthdaysToday()
         logger.info("M=notificationBirthdays msg=end at ${LocalDateTime.now()}")
     }
-
-    @Async
-    @Scheduled(cron = "0 58 19 ? * *")
-    fun algumacoisa(){
-        println("haru é gostoso, para bastante.")
-    }
-
 }

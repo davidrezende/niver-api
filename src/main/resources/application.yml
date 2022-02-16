@@ -20,7 +20,7 @@ spring:
     password: alterar
 
   datasource:
-    password: admin123
+    password: alterar
     username: postgres
     url: jdbc:postgresql://localhost:5432/niverdb
 
@@ -33,7 +33,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/niverdb
     schemas: public
     user: postgres
-    password: admin123
+    password: alterar
     locations: "classpath:db/migration"
     baselineOnMigrate: 'true'
 

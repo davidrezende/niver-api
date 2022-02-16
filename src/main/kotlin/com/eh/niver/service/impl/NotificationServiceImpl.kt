@@ -41,9 +41,10 @@ class NotificationServiceImpl(
     }
 
     override fun sendEmailToGroup(groupId: Long) {
+        val birthdays = personService.getBirthdaysToday()
         val members = groupService.getGroupById(groupId.toString()).members
-        members?.forEach {
-            sendNotificationByPersonId(it.id)
+        members?.filterNot { birthdays?.map { it.idPerson } == listOf(it.idPerson) }?.forEach {
+            sendNotificationByPersonId(it.idPerson)
         }
     }
 
