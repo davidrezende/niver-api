@@ -34,16 +34,4 @@ class NotificationController(
             throw e
         }
     }
-
-    @ApiOperation(value = "Envia um email de teste para membros do grupo do aniversariante.")
-    @GetMapping("/send/group/{groupId}")
-    fun sendEmailToGroup(@PathVariable groupId: Long) {
-        try {
-            notificationService.sendEmailToGroup(groupId)
-        } catch (e: Exception) {
-            throw e
-        }
-    }
-
-
 }

@@ -1,5 +1,7 @@
 package com.eh.niver.service.impl
 
+import com.eh.niver.model.Group
+import com.eh.niver.model.Person
 import com.eh.niver.model.vo.EmailVO
 import com.eh.niver.service.EmailService
 import com.eh.niver.service.GroupService
@@ -36,15 +38,13 @@ class NotificationServiceImpl(
         logger.info("Lista de aniversariantes: $birthdays")
         birthdays?.forEach {
             sendNotificationByPersonId(it.idPerson!!)
-            it.groups?.forEach { sendEmailToGroup(it.idGroup!!) }
+            it.groups?.forEach { group -> sendEmailToGroup(birthdays, group) }
         }
     }
 
-    override fun sendEmailToGroup(groupId: Long) {
-        val birthdays = personService.getBirthdaysToday()
-        val members = groupService.getGroupById(groupId.toString()).members
-        members?.filterNot { birthdays?.map { it.idPerson } == listOf(it.idPerson) }?.forEach {
-            sendNotificationByPersonId(it.idPerson)
+    private fun sendEmailToGroup(birthdays: List<Person>, group: Group) {
+        group.members?.filterNot { birthdays.map { it.idPerson } == listOf(it.idPerson) }?.forEach {
+            sendNotificationByPersonId(it.idPerson!!)
         }
     }
 
