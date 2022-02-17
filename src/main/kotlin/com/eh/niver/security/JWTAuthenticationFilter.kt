@@ -1,8 +1,8 @@
 package com.eh.niver.security
 
 import com.eh.niver.model.vo.Credentials
-import com.eh.niver.security.util.JWTUtil
 import com.eh.niver.model.vo.UserDetailsImpl
+import com.eh.niver.security.util.JWTUtil
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -28,6 +28,7 @@ class JWTAuthenticationFilter: UsernamePasswordAuthenticationFilter {
             val (email, password) = ObjectMapper().readValue(request.inputStream, Credentials::class.java)
 
             val token = UsernamePasswordAuthenticationToken(email, password)
+            token.details = email
 
             return authenticationManager.authenticate(token)
         } catch (e: Exception) {

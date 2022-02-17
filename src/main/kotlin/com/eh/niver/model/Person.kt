@@ -17,7 +17,7 @@ data class Person(
     @Column(name = "des_email")
     var email: String,
     @Column(name = "desc_password")
-    var password: String,
+    var password: String
 
 ){
     @JsonIgnore

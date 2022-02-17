@@ -41,4 +41,5 @@ server:
   port: '8090'
 
 jwt:
-  secret: secret
+  secret: exImfoq7urluYKsVqyWYj6dJgANgxk8u
+  expiration: "60000"

@@ -1,5 +1,6 @@
 package com.eh.niver.security
 
+import com.eh.niver.security.token.TokenCreator
 import com.eh.niver.security.util.JWTUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
@@ -17,7 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig: WebSecurityConfigurerAdapter() {
+class SecurityConfig(val tokenCreator: TokenCreator): WebSecurityConfigurerAdapter() {
 
     @Autowired
     private lateinit var userDetailsService: UserDetailsService
