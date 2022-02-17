@@ -20,16 +20,9 @@ class NotificationBirthdaysJob(val notificationService: NotificationService) {
     @Async
     @Scheduled(fixedRate = 60000, initialDelay = 5000)
     @Transactional
-    fun notificationBirthdays(){
+    fun notificationBirthdays() {
         logger.info("M=notificationBirthdays msg=init at ${LocalDateTime.now()}")
         notificationService.notificateBirthdaysToday()
         logger.info("M=notificationBirthdays msg=end at ${LocalDateTime.now()}")
     }
-
-    @Async
-    @Scheduled(cron = "0 58 19 ? * *")
-    fun algumacoisa(){
-        println("haru é gostoso, para bastante.")
-    }
-
 }

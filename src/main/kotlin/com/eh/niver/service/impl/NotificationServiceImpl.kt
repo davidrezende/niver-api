@@ -1,15 +1,21 @@
 package com.eh.niver.service.impl
 
+import com.eh.niver.model.Group
+import com.eh.niver.model.Person
 import com.eh.niver.model.vo.EmailVO
+import com.eh.niver.service.EmailService
+import com.eh.niver.service.GroupService
 import com.eh.niver.service.NotificationService
+import com.eh.niver.service.PersonService
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 
 @Service
 class NotificationServiceImpl(
-    private val personService: PersonServiceImpl,
-    private val emailService: EmailServiceImpl
+    private val personService: PersonService,
+    private val emailService: EmailService,
+    private val groupService: GroupService
 ) : NotificationService {
 
     companion object {
@@ -31,8 +37,14 @@ class NotificationServiceImpl(
         val birthdays = personService.getBirthdaysToday()
         logger.info("Lista de aniversariantes: $birthdays")
         birthdays?.forEach {
-            println(it.groups)
-//            sendNotificationByPersonId(it.idPerson!!)
+            sendNotificationByPersonId(it.idPerson!!)
+            it.groups?.forEach { group -> sendEmailToGroup(birthdays, group) }
+        }
+    }
+
+    private fun sendEmailToGroup(birthdays: List<Person>, group: Group) {
+        group.members?.filterNot { birthdays.map { it.idPerson } == listOf(it.idPerson) }?.forEach {
+            sendNotificationByPersonId(it.idPerson!!)
         }
     }
 

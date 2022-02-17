@@ -9,7 +9,7 @@ spring:
 
   mail:
     host: smtp.gmail.com
-    username: ALTERAR
+    username: alterar
     port: '587'
     properties:
       mail:
@@ -17,10 +17,10 @@ spring:
           starttls:
             enable: 'true'
           auth: 'true'
-    password: ALTERAR
+    password: alterar
 
   datasource:
-    password: admin123
+    password: 992120ogaiht
     username: postgres
     url: jdbc:postgresql://localhost:5432/niverdb
 
@@ -33,7 +33,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/niverdb
     schemas: public
     user: postgres
-    password: admin123
+    password: 992120ogaiht
     locations: "classpath:db/migration"
     baselineOnMigrate: 'true'
 
