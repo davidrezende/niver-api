@@ -43,3 +43,6 @@ server:
 jwt:
   secret: exImfoq7urluYKsVqyWYj6dJgANgxk8u
   expiration: "60000"
+
+cors:
+  origin: http://localhost:3000

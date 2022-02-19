@@ -24,7 +24,7 @@ class UserService {
     }
 
     fun myself(): String? {
-        return repository.findByEmail(getCurrentUserEmail()).name
+        return repository.findByEmail(getCurrentUserEmail()).get().name
     }
 
     private fun getCurrentUserEmail(): String {

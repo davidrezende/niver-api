@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiOperation
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
+import java.util.*
 
 @Api(value = "Endpoints de pessoa.")
 @RestController
@@ -26,7 +27,7 @@ class PersonController(val personService: PersonService) {
 
     @ApiOperation(value = "Procura uma pessoa por email.")
     @GetMapping("/email/{email}")
-    fun searchPersonByEmail(@PathVariable email: String): Person {
+    fun searchPersonByEmail(@PathVariable email: String): Optional<Person> {
         return personService.getPersonByEmail(email)
     }
 

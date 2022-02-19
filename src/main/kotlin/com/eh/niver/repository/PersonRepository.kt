@@ -10,7 +10,7 @@ import java.util.*
 
 @Repository
 interface PersonRepository : JpaRepository<Person, Long> {
-    fun findByEmail(email: String): Person
+    fun findByEmail(email: String): Optional<Person>
 
     @Query(
         value = "SELECT a.*\n" +

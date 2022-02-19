@@ -6,6 +6,7 @@ import com.eh.niver.service.PersonService
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.time.LocalDate
+import java.util.*
 
 @Service
 class PersonServiceImpl(val repository: PersonRepository): PersonService {
@@ -29,7 +30,7 @@ class PersonServiceImpl(val repository: PersonRepository): PersonService {
         return repository.findByBirthdaysForToday(today)
     }
 
-    override fun getPersonByEmail(email: String): Person {
+    override fun getPersonByEmail(email: String): Optional<Person> {
         logger.info("Procurando pessoa por Email: $email")
         return repository.findByEmail(email)
     }
