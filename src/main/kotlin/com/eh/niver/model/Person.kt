@@ -53,5 +53,5 @@ data class Person(
         foreignKey = ForeignKey(value = ConstraintMode.CONSTRAINT),
         inverseForeignKey = ForeignKey(value = ConstraintMode.CONSTRAINT)
     )
-    val groups: List<Group>? = null
+    var groups: List<Group>? = null
 }

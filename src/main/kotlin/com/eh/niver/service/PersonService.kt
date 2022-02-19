@@ -8,5 +8,6 @@ interface PersonService {
     fun getBirthdaysToday(): List<Person>?
     fun getPersonByEmail(email: String): Optional<Person>
     fun savePerson(person: Person): Person
+    fun updatePerson(person: Person): Person
     fun deletePerson(personId: String)
 }

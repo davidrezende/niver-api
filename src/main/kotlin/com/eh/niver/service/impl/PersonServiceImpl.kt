@@ -40,6 +40,20 @@ class PersonServiceImpl(val repository: PersonRepository): PersonService {
         return repository.save(person)
     }
 
+    override fun updatePerson(person: Person): Person {
+        logger.info("Atualizando uma pessoa: $person")
+        val personExists = repository.findByIdPerson(person.idPerson!!)
+        if(personExists.isEmpty){
+            throw Exception("Pessoa nao encontrada")
+        }
+        val personUpdated = personExists.get().apply {
+            name = person.name
+            email = person.email
+            birthday = person.birthday
+        }
+        return repository.save(personUpdated)
+    }
+
     override fun deletePerson(personId: String) {
         logger.info("Deletando uma pessoa $personId")
         return repository.deleteById(personId.toLong())

@@ -48,7 +48,7 @@ class PersonController(val personService: PersonService) {
     @PutMapping()
     fun updatePerson(@RequestBody person: Person): Person {
         logger.info("Atualizando uma pessoa: $person")
-        return personService.savePerson(person)
+        return personService.updatePerson(person)
     }
 
     @ApiOperation(value = "Deleta uma pessoa.")
