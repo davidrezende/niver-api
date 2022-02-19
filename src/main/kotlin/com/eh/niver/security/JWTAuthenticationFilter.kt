@@ -1,5 +1,6 @@
 package com.eh.niver.security
 
+import com.eh.niver.exception.custom.InvalidTokenException
 import com.eh.niver.model.vo.Credentials
 import com.eh.niver.model.vo.UserDetailsImpl
 import com.eh.niver.security.util.JWTUtil
@@ -14,14 +15,9 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 
-class JWTAuthenticationFilter: UsernamePasswordAuthenticationFilter {
+class JWTAuthenticationFilter(authenticationManager: AuthenticationManager, private var jwtUtil: JWTUtil) :
+    UsernamePasswordAuthenticationFilter() {
 
-    private var jwtUtil: JWTUtil
-
-    constructor(authenticationManager: AuthenticationManager, jwtUtil: JWTUtil) : super() {
-        this.authenticationManager = authenticationManager
-        this.jwtUtil = jwtUtil
-    }
 
     override fun attemptAuthentication(request: HttpServletRequest, response: HttpServletResponse?): Authentication? {
         try {
@@ -36,10 +32,20 @@ class JWTAuthenticationFilter: UsernamePasswordAuthenticationFilter {
         }
     }
 
-    override fun successfulAuthentication(request: HttpServletRequest?, response: HttpServletResponse, chain: FilterChain?, authResult: Authentication) {
-        val username = (authResult.principal as UserDetailsImpl).username
-        val token = jwtUtil.generateToken(username)
-        response.addHeader("Authorization", "Bearer $token")
+    override fun successfulAuthentication(
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        chain: FilterChain,
+        authResult: Authentication
+    ) {
+        val authorizationHeader = request.getHeader("Authorization")
+        if (authorizationHeader.startsWith("Bearer")) {
+            val username = (authResult.principal as UserDetailsImpl).username
+            val token = jwtUtil.generateToken(username)
+            response.addHeader("Authorization", "Bearer $token")
+        } else {
+            throw InvalidTokenException("There is no AccessToken in a request header");
+        }
     }
 
 }
