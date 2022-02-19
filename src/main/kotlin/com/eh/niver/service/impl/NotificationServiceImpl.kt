@@ -37,14 +37,16 @@ class NotificationServiceImpl(
         val birthdays = personService.getBirthdaysToday()
         logger.info("Lista de aniversariantes: $birthdays")
         birthdays?.forEach {
-            sendNotificationByPersonId(it.idPerson!!)
+//            sendNotificationByPersonId(it.idPerson!!)
+            println("enviei email pro aniversariante ${it.name}")
             it.groups?.forEach { group -> sendEmailToGroup(birthdays, group) }
         }
     }
 
     private fun sendEmailToGroup(birthdays: List<Person>, group: Group) {
         group.members?.filterNot { birthdays.map { it.idPerson } == listOf(it.idPerson) }?.forEach {
-            sendNotificationByPersonId(it.idPerson!!)
+//            sendNotificationByPersonId(it.idPerson!!)
+            println("enviei email pro ${it.name}")
         }
     }
 
