@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("auth/api")
-class UserController {
+class AuthenticationController {
     @Autowired
     private lateinit var userService: UserService
 
@@ -32,11 +32,9 @@ class UserController {
 
     @PostMapping("/authenticate")
     fun createAuthenticationToken(@RequestBody authenticationRequest: Credentials): ResponseEntity<*> {
-        println("authenticate: ${authenticationRequest.email} e ${authenticationRequest.password}")
         authenticate(authenticationRequest.email, authenticationRequest.password)
         val userDetails: UserDetails = userDetailsService.loadUserByUsername(authenticationRequest.email)
         val token: String = jwtTokenUtil.generateToken(userDetails.username)
-        println("token emitido: $token")
         return ResponseEntity.ok<Any>(JWTResponse(token))
     }
 
@@ -46,11 +44,6 @@ class UserController {
         } catch (e: DisabledException) {
             throw Exception("USER_DISABLED", e)
         }
-    }
-
-    @PostMapping
-    fun savePerson(@RequestBody person: Person): Person {
-        return userService.create(person)
     }
 
     @GetMapping("/me")

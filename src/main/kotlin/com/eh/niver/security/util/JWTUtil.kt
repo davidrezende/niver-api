@@ -33,14 +33,11 @@ class JWTUtil {
     }
 
     fun isTokenValid(token: String): Boolean {
-        logger.info( "token: $token" )
         val claims = getClaimsToken(token)
-        logger.info( "claims: ${claims.toString()}" )
         if (claims != null) {
             val username = claims.subject
             val expirationDate = claims.expiration
             val now = Date(System.currentTimeMillis())
-            logger.info( "data de validada valida: ${now.before(expirationDate)}" )
             if (username != null && expirationDate != null && now.before(expirationDate)) {
                 return true
             }
