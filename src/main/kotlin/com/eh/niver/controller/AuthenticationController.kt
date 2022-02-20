@@ -12,7 +12,6 @@ import org.springframework.security.authentication.DisabledException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
-import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -32,6 +31,7 @@ class AuthenticationController {
 
     @PostMapping("/authenticate")
     fun createAuthenticationToken(@RequestBody authenticationRequest: Credentials): ResponseEntity<*> {
+        println(authenticationRequest.toString())
         authenticate(authenticationRequest.email, authenticationRequest.password)
         val userDetails: UserDetails = userDetailsService.loadUserByUsername(authenticationRequest.email)
         val token: String = jwtTokenUtil.generateToken(userDetails.username)
@@ -44,6 +44,11 @@ class AuthenticationController {
         } catch (e: DisabledException) {
             throw Exception("USER_DISABLED", e)
         }
+    }
+
+    @PostMapping
+    fun savePerson(@RequestBody person: Person): Person {
+        return userService.create(person)
     }
 
     @GetMapping("/me")
