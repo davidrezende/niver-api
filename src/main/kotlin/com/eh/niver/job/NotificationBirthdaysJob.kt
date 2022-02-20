@@ -18,7 +18,7 @@ class NotificationBirthdaysJob(val notificationService: NotificationService) {
     }
 
     @Async
-    @Scheduled(fixedRate = 60000, initialDelay = 5000)
+//    @Scheduled(fixedRate = 60000, initialDelay = 5000)
     @Transactional
     fun notificationBirthdays() {
         logger.info("M=notificationBirthdays msg=init at ${LocalDateTime.now()}")
