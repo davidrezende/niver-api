@@ -4,6 +4,7 @@ import com.eh.niver.model.Person
 import com.eh.niver.model.vo.Credentials
 import com.eh.niver.model.vo.JWTResponse
 import com.eh.niver.security.util.JWTUtil
+import com.eh.niver.service.PersonService
 import com.eh.niver.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("auth/api")
-class AuthenticationController {
+class AuthenticationController(val personService: PersonService) {
     @Autowired
     private lateinit var userService: UserService
 
@@ -33,9 +34,11 @@ class AuthenticationController {
     fun createAuthenticationToken(@RequestBody authenticationRequest: Credentials): ResponseEntity<*> {
         println(authenticationRequest.toString())
         authenticate(authenticationRequest.email, authenticationRequest.password)
-        val userDetails: UserDetails = userDetailsService.loadUserByUsername(authenticationRequest.email)
-        val token: String = jwtTokenUtil.generateToken(userDetails.username)
-        return ResponseEntity.ok<Any>(JWTResponse(token))
+
+        val personData = personService.getPersonByEmail(authenticationRequest.email).get()
+//        val userDetails: UserDetails = userDetailsService.loadUserByUsername(authenticationRequest.email)
+        val token: String = jwtTokenUtil.generateToken(personData.email)
+        return ResponseEntity.ok<Any>(JWTResponse(token, personData.idPerson!!, personData.name))
     }
 
     private fun authenticate(username: String, password: String) {
