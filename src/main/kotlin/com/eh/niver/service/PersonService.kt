@@ -9,4 +9,5 @@ interface PersonService {
     fun getPersonByEmail(email: String): Person
     fun savePerson(person: Person): Person
     fun deletePerson(personId: String)
+    fun findByMonthlyBirthdays(): List<Person>?
 }

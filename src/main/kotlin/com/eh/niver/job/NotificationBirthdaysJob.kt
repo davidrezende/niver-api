@@ -28,9 +28,12 @@ class NotificationBirthdaysJob(val notificationService: NotificationService) {
 
     @Async
     //TODO: montar uma crown que rode apenas uma vez no mes
+    @Scheduled(cron = "0 32 13 19 1-12 *")
     @Transactional
     fun notificationMonthlyBirthdays(){
+        logger.info("M=notificationMonthlyBirthdays msg=init at ${LocalDateTime.now()}")
         notificationService.notificateMonthlyBirthdays()
+        logger.info("M=notificationMonthlyBirthdays msg=end at ${LocalDateTime.now()}")
     }
 
 }

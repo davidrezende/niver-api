@@ -15,8 +15,7 @@ import java.time.LocalDate
 @Service
 class NotificationServiceImpl(
     private val personService: PersonService,
-    private val emailService: EmailService,
-    private val personRepository: PersonRepository
+    private val emailService: EmailService
 ) : NotificationService {
 
     companion object {
@@ -50,10 +49,10 @@ class NotificationServiceImpl(
     }
 
     override fun notificateMonthlyBirthdays() {
-        //colocar camada de service de person
-        val birthdaysMonthly = personRepository.findByMonthlyBirthdays()
+        val birthdaysMonthly = personService.findByMonthlyBirthdays()
+        logger.info("Lista de aniversariantes do mês: $birthdaysMonthly")
         birthdaysMonthly?.forEach {
-            println(it.name)
+            it.groups?.forEach { group -> sendEmailToGroup(birthdaysMonthly, group) }
         }
     }
 
