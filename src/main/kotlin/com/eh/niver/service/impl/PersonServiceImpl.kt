@@ -6,6 +6,7 @@ import com.eh.niver.service.PersonService
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.time.LocalDate
+import java.util.*
 
 @Service
 class PersonServiceImpl(val repository: PersonRepository): PersonService {
@@ -29,7 +30,7 @@ class PersonServiceImpl(val repository: PersonRepository): PersonService {
         return repository.findByBirthdaysForToday(today)
     }
 
-    override fun getPersonByEmail(email: String): Person {
+    override fun getPersonByEmail(email: String): Optional<Person> {
         logger.info("Procurando pessoa por Email: $email")
         return repository.findByEmail(email)
     }
@@ -37,6 +38,20 @@ class PersonServiceImpl(val repository: PersonRepository): PersonService {
     override fun savePerson(person: Person): Person {
         logger.info("Salvando uma pessoa: $person")
         return repository.save(person)
+    }
+
+    override fun updatePerson(person: Person): Person {
+        logger.info("Atualizando uma pessoa: $person")
+        val personExists = repository.findByIdPerson(person.idPerson!!)
+        if(personExists.isEmpty){
+            throw Exception("Pessoa nao encontrada")
+        }
+        val personUpdated = personExists.get().apply {
+            name = person.name
+            email = person.email
+            birthday = person.birthday
+        }
+        return repository.save(personUpdated)
     }
 
     override fun deletePerson(personId: String) {

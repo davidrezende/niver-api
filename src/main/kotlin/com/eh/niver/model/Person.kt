@@ -17,7 +17,7 @@ data class Person(
     @Column(name = "des_email")
     var email: String,
     @Column(name = "desc_password")
-    var password: String,
+    var password: String
 
 ){
     @JsonIgnore
@@ -53,5 +53,5 @@ data class Person(
         foreignKey = ForeignKey(value = ConstraintMode.CONSTRAINT),
         inverseForeignKey = ForeignKey(value = ConstraintMode.CONSTRAINT)
     )
-    val groups: List<Group>? = null
+    var groups: List<Group>? = null
 }

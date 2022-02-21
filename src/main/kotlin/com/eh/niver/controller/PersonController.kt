@@ -2,11 +2,14 @@ package com.eh.niver.controller
 
 import com.eh.niver.model.Person
 import com.eh.niver.service.PersonService
+import com.eh.niver.service.UserService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
+import java.util.*
 
 @Api(value = "Endpoints de pessoa.")
 @RestController
@@ -17,6 +20,9 @@ class PersonController(val personService: PersonService) {
         private val logger = LoggerFactory.getLogger(PersonController::class.java)
     }
 
+    @Autowired
+    private lateinit var userService: UserService
+
     @CrossOrigin
     @ApiOperation(value = "Procura pessoa por Id.")
     @GetMapping("/id/{idPerson}")
@@ -26,7 +32,7 @@ class PersonController(val personService: PersonService) {
 
     @ApiOperation(value = "Procura uma pessoa por email.")
     @GetMapping("/email/{email}")
-    fun searchPersonByEmail(@PathVariable email: String): Person {
+    fun searchPersonByEmail(@PathVariable email: String): Optional<Person> {
         return personService.getPersonByEmail(email)
     }
 
@@ -40,14 +46,14 @@ class PersonController(val personService: PersonService) {
     @ApiOperation(value = "Salva uma pessoa.")
     @PostMapping()
     fun savePerson(@RequestBody person: Person): Person {
-        return personService.savePerson(person)
+        return userService.create(person)
     }
 
     @ApiOperation(value = "Atualiza uma pessoa.")
     @PutMapping()
     fun updatePerson(@RequestBody person: Person): Person {
         logger.info("Atualizando uma pessoa: $person")
-        return personService.savePerson(person)
+        return personService.updatePerson(person)
     }
 
     @ApiOperation(value = "Deleta uma pessoa.")
