@@ -49,12 +49,14 @@ class GroupServiceImpl(val repository: GroupRepository, val personService: Perso
             name = group.get().name,
             owner = ResponseMember(
                 idPerson = group.get().owner.idPerson!!,
-                name = group.get().owner.name
+                name = group.get().owner.name,
+                birthday = group.get().owner.birthday
             ),
             members = group.get().members?.map { oto ->
                 ResponseMember(
                     idPerson = oto.idPerson!!,
-                    name = oto.name
+                    name = oto.name,
+                    birthday = oto.birthday
                 )
             }
         )
@@ -85,12 +87,14 @@ class GroupServiceImpl(val repository: GroupRepository, val personService: Perso
                 idGroup = it.idGroup,
                 owner = ResponseMember(
                         idPerson = it.owner.idPerson!!,
-                        name = it.owner.name
+                        name = it.owner.name,
+                        birthday = it.owner.birthday
                 ),
                 members = it.members?.map { oto ->
                     ResponseMember(
                         idPerson = oto.idPerson!!,
-                        name = oto.name
+                        name = oto.name,
+                        birthday = oto.birthday
                     )
                 }
             )
