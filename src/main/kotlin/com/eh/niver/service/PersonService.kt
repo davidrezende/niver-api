@@ -10,4 +10,5 @@ interface PersonService {
     fun savePerson(person: Person): Person
     fun updatePerson(person: Person): Person
     fun deletePerson(personId: String)
+    fun findByMonthlyBirthdays(): List<Person>?
 }

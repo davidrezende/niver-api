@@ -59,4 +59,9 @@ class PersonServiceImpl(val repository: PersonRepository): PersonService {
         return repository.deleteById(personId.toLong())
     }
 
+    override fun findByMonthlyBirthdays(): List<Person>? {
+        logger.info("Buscando aniversariantes do mês ${LocalDate.now()}.")
+        return repository.findByMonthlyBirthdays()
+    }
+
 }
