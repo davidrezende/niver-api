@@ -19,7 +19,7 @@ class NotificationController(
     @PostMapping("/send")
     fun sendEmail(@RequestBody request: RequestSendEmail) {
         try {
-            notificationService.sendNotificationByPersonId(request.idPerson)
+            notificationService.sendNotificationByPersonId(request.idPerson, "null", "null")
         } catch (e: Exception) {
             throw e
         }
