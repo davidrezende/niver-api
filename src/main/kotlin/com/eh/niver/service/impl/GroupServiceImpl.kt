@@ -128,5 +128,4 @@ class GroupServiceImpl(val repository: GroupRepository, val personService: Perso
         repository.save(group.get())
     }
 
-
 }
