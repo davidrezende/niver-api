@@ -5,5 +5,5 @@ import java.time.LocalDate
 data class ResponseMember(
     var idPerson : Long,
     var name: String?,
-    var birthday: LocalDate
+    var birthday: LocalDate?
 )
