@@ -19,7 +19,7 @@ class GroupController(val groupService: GroupService) {
 
     @CrossOrigin
     @ApiOperation(value = "Salva um grupo.")
-    @PostMapping()
+    @PostMapping
     fun saveGroup(@RequestBody group: RequestSaveGroup): Group {
         return groupService.saveGroup(group)
     }
