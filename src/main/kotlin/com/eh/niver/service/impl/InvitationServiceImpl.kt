@@ -24,7 +24,7 @@ class InvitationServiceImpl(
     }
 
     @Transactional(rollbackOn = [Exception::class])
-    override fun createAndUpdateHash(group: RequestCreateHash): UUID {
+    override fun createAndUpdateHash(group: RequestCreateHash): ResponseGroupInvitation {
         val grupo = groupRepository.findById(group.idGroup)
         if (group.owner != grupo.get().owner.idPerson) {
             throw Exception("O dono do grupo não é o mesmo.")
@@ -38,7 +38,13 @@ class InvitationServiceImpl(
                     group = grupo.get()
                 )
             )
-            return inv.uuidHash
+            return ResponseGroupInvitation(
+                groupId = group.idGroup,
+                groupName = grupo.get().name,
+                ownerId= group.owner,
+                ownerName= grupo.get().owner.name,
+                inviteHash = inv.uuidHash.toString()
+            )
         } else {
             logger.info("M=createAndUpdateHash msg= Convite ja existe, deletando e criando um novo.")
             repository.deleteById(grupo.get().invite!!.uuidHash)
@@ -49,19 +55,31 @@ class InvitationServiceImpl(
                     group = grupo.get()
                 )
             )
-            return inv.uuidHash
+            return ResponseGroupInvitation(
+                groupId = group.idGroup,
+                groupName = grupo.get().name,
+                ownerId= group.owner,
+                ownerName= grupo.get().owner.name,
+                inviteHash = inv.uuidHash.toString()
+            )
         }
     }
 
-    override fun getInviteByGroupId(groupId: String, ownerId: String): UUID {
-        val grupo = groupRepository.findById(groupId.toLong())
+    override fun getInviteByGroupId(groupId: Long, ownerId: Long): ResponseGroupInvitation {
+        val grupo = groupRepository.findById(groupId)
         logger.info("M=getInviteByGroupId msg=Buscando hash pelo pelo grupo: $groupId")
-        if (ownerId.toLong() != grupo.get().owner.idPerson) {
+        if (ownerId != grupo.get().owner.idPerson) {
             throw Exception("O dono do grupo não é o mesmo.")
         }
         val inv = repository.findInvitationByGroup(groupRepository.findById(groupId.toLong()))
 
-        return inv.uuidHash
+        return ResponseGroupInvitation(
+            groupId = groupId,
+            groupName = grupo.get().name,
+            ownerId= ownerId,
+            ownerName= grupo.get().owner.name,
+            inviteHash = inv.uuidHash.toString()
+        )
     }
 
     override fun getGroupByInvitationHash(hash: UUID): ResponseGroupInvitation {
