@@ -27,7 +27,6 @@ class NotificationBirthdaysJob(val notificationService: NotificationService) {
     }
 
     @Async
-    //TODO: montar uma crown que rode apenas uma vez no mes
 //    @Scheduled(fixedRate = 60000, initialDelay = 5000)
     @Transactional
     fun notificationMonthlyBirthdays(){

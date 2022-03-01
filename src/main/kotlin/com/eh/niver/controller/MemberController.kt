@@ -16,7 +16,7 @@ class MemberController(val memberService: MemberService) {
         private val logger = LoggerFactory.getLogger(MemberController::class.java)
     }
 
-    @ApiOperation(value = "Salva uma pessoa em um grupo.")
+    @ApiOperation(value = "Salva uma pessoa em um grupo com um convite.")
     @PostMapping()
     fun savePersonInGroup(@RequestBody member: RequestSaveMember) {
         memberService.saveMemberInGroup(member)

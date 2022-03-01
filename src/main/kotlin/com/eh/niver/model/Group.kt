@@ -1,5 +1,6 @@
 package com.eh.niver.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
 
 @Entity
@@ -44,6 +45,10 @@ data class Group(
         foreignKey = ForeignKey(value = ConstraintMode.CONSTRAINT),
         inverseForeignKey = ForeignKey(value = ConstraintMode.CONSTRAINT)
     )
-    var members: MutableList<Person>? = null
+    var members: MutableList<Person>? = null,
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "group")
+    val invite: Invitation? = null
 
 )

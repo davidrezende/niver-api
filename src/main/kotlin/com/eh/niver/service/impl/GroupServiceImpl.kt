@@ -8,12 +8,13 @@ import com.eh.niver.model.vo.ResponseGroup
 import com.eh.niver.model.vo.ResponseMember
 import com.eh.niver.repository.GroupRepository
 import com.eh.niver.service.GroupService
+import com.eh.niver.service.InvitationService
 import com.eh.niver.service.PersonService
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
-class GroupServiceImpl(val repository: GroupRepository, val personService: PersonService) : GroupService {
+class GroupServiceImpl(val repository: GroupRepository, val personService: PersonService, val invitationService: InvitationService) : GroupService {
 
     companion object {
         private val logger = LoggerFactory.getLogger(GroupServiceImpl::class.java)
@@ -113,6 +114,8 @@ class GroupServiceImpl(val repository: GroupRepository, val personService: Perso
         if (!group.isEmpty) {
             group.get().members?.add(person)
         }
+
+        invitationService.updateUsedGroupInvite(member.hash)
         repository.save(group.get())
     }
 
@@ -127,6 +130,5 @@ class GroupServiceImpl(val repository: GroupRepository, val personService: Perso
         )
         repository.save(group.get())
     }
-
 
 }
