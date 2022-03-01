@@ -4,5 +4,6 @@ data class ResponseGroupInvitation(
     val groupId: Long,
     val groupName: String,
     val ownerId: Long?,
-    val ownerName: String
+    val ownerName: String,
+    val inviteHash: String? = null
 )

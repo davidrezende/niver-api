@@ -14,18 +14,19 @@ class InvitationController(val invitationService: InvitationService) {
 
     @ApiOperation(value = "Cria e altera um hash de convite para um grupo")
     @PostMapping()
-    fun createHash(@RequestBody group: RequestCreateHash ): UUID?{
+    fun createHash(@RequestBody group: RequestCreateHash ): ResponseGroupInvitation?{
         return invitationService.createAndUpdateHash(group)
     }
 
-    @ApiOperation(value = "Procura convite por id do grupo")
-    @GetMapping("/group/{groupId}/{ownerId}")
-    fun getInviteByGroupId(@PathVariable groupId: String, @PathVariable ownerId: String): UUID{
+    @ApiOperation(value = "Procura convite por grupo")
+    @GetMapping("/{groupId}/{ownerId}")
+    fun getInviteByGroupId(@PathVariable groupId: Long, @PathVariable ownerId: Long): ResponseGroupInvitation{
+        println("grupo : $groupId e ownerId: $ownerId")
         return invitationService.getInviteByGroupId(groupId, ownerId)
     }
 
     @ApiOperation(value = "Procura grupo e owner por hash do convite")
-    @GetMapping("/hash/{hash}")
+    @GetMapping("/{hash}")
     fun getGroupByInvitationHash(@PathVariable hash: UUID): ResponseGroupInvitation{
         return invitationService.getGroupByInvitationHash(hash)
     }
