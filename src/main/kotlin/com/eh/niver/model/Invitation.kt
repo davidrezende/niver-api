@@ -11,7 +11,7 @@ data class Invitation(
     var uuidHash:UUID = UUID.randomUUID(),
     @Column(name = "used")
     var used: Long?,
-    @Column(name = "dat_creationdate")
+    @Column(name = "dat_creation")
     var creation: LocalDate,
 
     @OneToOne

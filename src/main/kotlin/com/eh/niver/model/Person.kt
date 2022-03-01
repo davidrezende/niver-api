@@ -16,7 +16,7 @@ data class Person(
     var birthday: LocalDate,
     @Column(name = "des_email")
     var email: String,
-    @Column(name = "desc_password")
+    @Column(name = "des_password")
     var password: String
 
 ){
