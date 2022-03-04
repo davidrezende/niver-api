@@ -2,10 +2,10 @@ spring:
   jpa:
     generate-ddl: 'false'
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: 'true'
+    show-sql: 'false'
     properties:
       hibernate:
-        format_sql=true: 'true'
+        format_sql=true: 'false'
 
   mail:
     host: smtp.gmail.com
@@ -42,7 +42,7 @@ server:
 
 jwt:
   secret: exImfoq7urluYKsVqyWYj6dJgANgxk8u
-  expiration: "600000"
+  expiration: "86400000"
 
 cors:
   origin: http://localhost:3000

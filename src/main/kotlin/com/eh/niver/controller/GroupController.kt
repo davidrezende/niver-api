@@ -17,14 +17,12 @@ class GroupController(val groupService: GroupService) {
         private val logger = LoggerFactory.getLogger(GroupController::class.java)
     }
 
-    @CrossOrigin
     @ApiOperation(value = "Salva um grupo.")
     @PostMapping
     fun saveGroup(@RequestBody group: RequestSaveGroup): Group {
         return groupService.saveGroup(group)
     }
 
-    @CrossOrigin
     @ApiOperation(value = "Deleta um grupo.")
     @DeleteMapping("/{groupId}")
     fun deleteGroup(@PathVariable groupId: String) {
@@ -37,7 +35,6 @@ class GroupController(val groupService: GroupService) {
         return groupService.getGroupById(groupId)
     }
 
-    @CrossOrigin
     @ApiOperation(value = "Atualiza um grupo.")
     @PutMapping()
     fun updateGroup(@RequestBody group: RequestSaveGroup): Group {

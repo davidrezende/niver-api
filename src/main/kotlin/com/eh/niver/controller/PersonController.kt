@@ -25,7 +25,6 @@ class PersonController(val personService: PersonService) {
     @Autowired
     private lateinit var userService: UserService
 
-    @CrossOrigin
     @ApiOperation(value = "Procura pessoa por Id.")
     @GetMapping("/id/{idPerson}")
     fun searchPersonById(@PathVariable idPerson: Long): Person {
