@@ -32,12 +32,15 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
         web.ignoring().antMatchers(
             "/v2/api-docs",
             "/configuration/ui",
+            "/swagger/**",
+            "/swagger-ui/**",
             "/swagger-resources/**",
-            "/configuration/security",
+            "/configuration/**",
             "/swagger-ui.html",
+            "/v3/api-docs/**",
             "/webjars/**",
             "/auth/api/**",
-            "/invite/api/**"
+            "/invite/api/info/**",
 //            "/**"
         )
     }

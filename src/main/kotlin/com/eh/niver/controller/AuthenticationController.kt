@@ -2,33 +2,25 @@ package com.eh.niver.controller
 
 import com.eh.niver.model.Person
 import com.eh.niver.model.vo.Credentials
-import com.eh.niver.model.vo.JWTResponse
-import com.eh.niver.security.util.JWTUtil
 import com.eh.niver.service.AuthenticationService
-import com.eh.niver.service.PersonService
-import com.eh.niver.service.UserService
-import io.swagger.annotations.Api
-import org.springframework.beans.factory.annotation.Autowired
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
-import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.authentication.DisabledException
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.userdetails.UserDetails
-import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.web.bind.annotation.*
 
-@Api(value = "Endpoints de autenticacao.")
+@Tag(name = "Autenticacao")
 @RestController
 @RequestMapping("auth/api")
 class AuthenticationController(val authenticationService: AuthenticationService) {
 //    @Autowired
 //    private lateinit var userService: UserService
-
+    @Operation(summary = "Endpoint de login")
     @PostMapping("/authenticate")
     fun authenticatePersonAndGenerateToken(@RequestBody authenticationRequest: Credentials): ResponseEntity<*> {
         return ResponseEntity.ok<Any>(authenticationService.generateToken(authenticationRequest))
     }
 
+    @Operation(summary = "Endpoint de registro")
     @PostMapping
     fun savePersonWithBCryptPassword(@RequestBody person: Person): Person {
         return authenticationService.createUser(person)
