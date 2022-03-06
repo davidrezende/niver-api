@@ -44,6 +44,9 @@ server:
     keyStore: classpath:keystore/keystore.p12
     keyStorePassword: test123
     keyAlias: keystore
+    #keyStore: classpath:keystore/niver-api-test.p12
+    #keyStorePassword: test123
+    #keyAlias: niver-api-test
     enabled: true
 
 jwt:

@@ -20,8 +20,12 @@ services:
       - SPRING_FLYWAY_URL=jdbc:postgresql://db:5432/niverdb
       - SERVER_SSL_KEY_STORE_PASSWORD=test123
       - SERVER_SSL_KEY_ALIAS=keystore
+      #- SERVER_SSL_KEY_STORE= "classpath:keystore/niver-api-test.p12"
+      #- SERVER_SSL_KEY_STORE_PASSWORD=test123
+      #- SERVER_SSL_KEY_ALIAS=niver-api-test
+      - SERVER_PORT=8443
     ports:
-      - "8090:8090"
+      - "8443:8443"
 
   db:
     container_name: pg_container
