@@ -33,7 +33,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/niverdb
     schemas: public
     user: postgres
-    password: 992120ogaiht
+    password: admin123
     locations: "classpath:db/migration"
     baselineOnMigrate: 'true'
 
