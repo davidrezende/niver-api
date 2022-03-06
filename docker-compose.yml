@@ -18,9 +18,8 @@ services:
       - SPRING_FLYWAY_PASSWORD=admin1234
       - SPRING_FLYWAY_SCHEMAS=public
       - SPRING_FLYWAY_URL=jdbc:postgresql://db:5432/niverdb
-      - SERVER_SSL_KEY_STORE= "classpath:keystore/niver-api-test.p12"
       - SERVER_SSL_KEY_STORE_PASSWORD=test123
-      - SERVER_SSL_KEY_ALIAS=niver-api-test
+      - SERVER_SSL_KEY_ALIAS=keystore
     ports:
       - "8090:8090"
 
