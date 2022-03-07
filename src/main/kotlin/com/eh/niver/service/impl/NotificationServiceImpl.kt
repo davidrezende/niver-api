@@ -102,7 +102,7 @@ class NotificationServiceImpl(
                             sendNotificationByPersonId(
                                 members.idPerson!!,
                                 "Tem gente do ${group.name} fazendo aniversário esse mês",
-                                "Aniversariantes do mês: \n ${birthdayMembers?.forEach { birthday -> birthday.name + " Data: " + birthday.birthday + " \n"}}"
+                                "Aniversariantes do mês: \n ${birthdayMembers?.forEach { birthday -> "- " + birthday.name + " faz aniversário no dia " + birthday.birthday.dayOfMonth + " \n"}}"
                             )
                         }
                         notificatedGroups.add(group.idGroup)
