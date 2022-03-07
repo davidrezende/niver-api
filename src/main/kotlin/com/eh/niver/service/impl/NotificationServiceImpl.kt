@@ -37,7 +37,7 @@ class NotificationServiceImpl(
         val birthdays = personService.getBirthdaysToday()
         logger.info("Lista de aniversariantes: $birthdays")
         birthdays?.forEach {
-            sendNotificationByPersonId(it.idPerson!!, "Feliz Aniversário ${it.name.split(" ").first()}", "Sei lá bixo")
+            sendNotificationByPersonId(it.idPerson!!, "Feliz Aniversário ${it.name.split(" ").first()}", "Parabéns <3 !")
             println("enviei email pro aniversariante ${it.name}")
             it.groups?.forEach { group -> sendEmailToGroupOfBirthdayToday(birthdays, group, it.idPerson!!) }
         }
@@ -55,14 +55,14 @@ class NotificationServiceImpl(
                 sendNotificationByPersonId(
                     it.idPerson!!,
                     "Tem gente do ${group.name} fazendo aniversário hoje",
-                    "Aniversariantes do grupo: ${birthdayMembers?.forEach { birthday -> birthday.name + " " }}"
+                    "Aniversariantes do grupo: ${birthdayMembers?.forEach { birthday -> "\n"+  birthday.name }}"
                 )
             }
             println("enviando em email para o aniversariante com a lista dos demais aniversariantes do dia ${birthdayMembers?.filter { birthday -> birthday.idPerson != idPerson }}")
             sendNotificationByPersonId(
                 idPerson,
                 "Tem gente do ${group.name} fazendo aniversário hoje",
-                "Aniversariantes do grupo: ${birthdayMembers?.filter { birthday -> birthday.idPerson != idPerson }?.forEach { birthday -> birthday.name + " " }}"
+                "Aniversariantes do grupo: ${birthdayMembers?.filter { birthday -> birthday.idPerson != idPerson }?.forEach { birthday -> "\n"+   birthday.name }}"
             )
 
         } else {
@@ -71,7 +71,7 @@ class NotificationServiceImpl(
                 sendNotificationByPersonId(
                     it.idPerson!!,
                     "${birthdayMembers?.get(0)?.name?.split(" ")?.first()} do ${group.name} faz aniversario hoje!",
-                    "${birthdayMembers?.get(0)?.name?.split(" ")?.first()} está fazendo aniversário hoje"
+                    "${birthdayMembers?.get(0)?.name?.split(" ")?.first()} está fazendo aniversário hoje!"
                 )
             }
 
@@ -111,7 +111,7 @@ class NotificationServiceImpl(
                             sendNotificationByPersonId(
                                 nonBirthdayMember.idPerson!!,
                                 "${birthdayMembers?.get(0)?.name?.split(" ")?.first()} do ${group.name} faz aniversário esse mês!",
-                                "${birthdayMembers?.get(0)?.name?.split(" ")?.first()} está fazendo aniversário hoje")
+                                "${birthdayMembers?.get(0)?.name?.split(" ")?.first()} está fazendo aniversário esse mês!")
                         }
                     }
 
