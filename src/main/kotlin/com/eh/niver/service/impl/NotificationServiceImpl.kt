@@ -55,7 +55,7 @@ class NotificationServiceImpl(
                 sendNotificationByPersonId(
                     it.idPerson!!,
                     "Tem gente do ${group.name} fazendo aniversário hoje",
-                    "Aniversariantes do grupo: \n${birthdayMembers?.filter { birthday -> birthday.idPerson != idPerson }?.map { birthday ->  birthday.name }.toString().replace("[","").replace("]","")}"
+                    "Aniversariantes do grupo: \n${birthdayMembers?.map { birthday ->  birthday.name }.toString().replace("[","").replace("]","")}"
                 )
             }
             println("enviando em email para o aniversariante com a lista dos demais aniversariantes do dia ${birthdayMembers?.filter { birthday -> birthday.idPerson != idPerson }}")

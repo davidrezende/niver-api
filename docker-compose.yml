@@ -9,6 +9,7 @@ services:
     depends_on:
       - db
     environment:
+      - TZ=America/Sao_Paulo
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/niverdb
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=admin1234
@@ -19,10 +20,13 @@ services:
       - SPRING_FLYWAY_SCHEMAS=public
       - SPRING_FLYWAY_URL=jdbc:postgresql://db:5432/niverdb
       - SERVER_SSL_KEY_STORE_PASSWORD=test123
-      - SERVER_SSL_KEY_ALIAS=keystore
+      - SERVER_SSL_ENABLED=true
       #- SERVER_SSL_KEY_STORE= "classpath:keystore/niver-api-test.p12"
       #- SERVER_SSL_KEY_STORE_PASSWORD=test123
       #- SERVER_SSL_KEY_ALIAS=niver-api-test
+      - CORS_ORIGIN=https://alterar.com
+      - SPRING_MAIL_USERNAME=alterar@gmail.com
+      - SPRING_MAIL_PASSWORD=alterartokenemail
       - SERVER_PORT=8443
     ports:
       - "8443:8443"
@@ -34,21 +38,12 @@ services:
       - db-data:/var/lib/postgresql/data
     restart: always
     environment:
+      TZ: "America/Sao_Paulo"
       POSTGRES_DB: niverdb
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin1234
     ports:
       - "5432:5432"
-
-  pgadmin:
-    container_name: pgadmin4_container
-    image: dpage/pgadmin4
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: root
-    ports:
-      - "5050:80"
 
 volumes:
   db-data:
