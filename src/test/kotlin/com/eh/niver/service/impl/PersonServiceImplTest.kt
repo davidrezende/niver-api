@@ -1,6 +1,7 @@
 package com.eh.niver.service.impl
 
 import com.eh.niver.model.Person
+import com.eh.niver.model.vo.RequestUpdatePasswordPerson
 import com.eh.niver.model.vo.RequestUpdatePerson
 import com.eh.niver.repository.PersonRepository
 import com.eh.niver.service.AuthenticationService
@@ -20,26 +21,20 @@ import java.util.*
 @ExtendWith(MockKExtension::class)
 class PersonServiceImplTest {
 
-    //Mockamos os parametros utilizados pelo construtor da nossa serviceImpl ( classe a ser testada nesse arquivo )
     @MockK(relaxed = true)
     lateinit var repository : PersonRepository
 
     @MockK
     lateinit var authenticationService: AuthenticationService
 
-    //Apos mockar os dados que sao utilizados na nossa service acima, injetamos esse mocks na nossa service
-    //representada abaixo por "service"
-    //agora podemos realizar chamadas aos metodos da nossa classe alvo e testa-los
     @InjectMockKs
     lateinit var service: PersonServiceImpl
 
     @DisplayName("should return person by id")
     @Test
     fun getPersonById_shouldReturnPersonById() {
-        //massa
-        //input
         val idPerson: Long = 8
-        //output
+
         val personReturn = Optional.of(Person(
             idPerson = idPerson,
             name = "Joselito",
@@ -47,15 +42,11 @@ class PersonServiceImplTest {
             email = "joselito@gmail.com",
             password = "joselito123"
         ))
-        //fim massa
 
-        //mock
         every { repository.findByIdPerson(idPerson) } returns personReturn
 
-        //test
         val result = service.getPersonById(idPerson)
 
-        //validate
         Assertions.assertEquals(personReturn.get(), result)
     }
 
@@ -69,7 +60,7 @@ class PersonServiceImplTest {
         assertThrows<Exception> { service.getPersonById(idPerson) }
     }
 
-    @DisplayName("should return all today birthdays")
+    @DisplayName("should return all today's birthdays")
     @Test
     fun getBirthdaysToday_shouldReturnTodayBirthdays(){
         val today = LocalDate.now()
@@ -109,9 +100,19 @@ class PersonServiceImplTest {
         Assertions.assertEquals(personReturn, result)
     }
 
-    @DisplayName("should save with sucess")
+    @DisplayName("should return exception if person not exists")
     @Test
-    fun savePerson_thenReturnSucess(){
+    fun getPersonByEmail_shouldReturnEmptyPerson() {
+        val email = "teste@teste.com"
+
+        every { repository.findByEmail(any()) } returns Optional.empty()
+
+        assertThrows<Exception> { service.getPersonByEmail(email) }
+    }
+
+    @DisplayName("should save with success")
+    @Test
+    fun savePerson_thenReturnSuccess(){
 
         val person = Person(
             idPerson = null,
@@ -120,7 +121,7 @@ class PersonServiceImplTest {
             email = "test@mock.com",
             password = "mockPass"
         )
-        //given
+
         val personReturn = Person(
             idPerson = 1,
             name = "MockTest",
@@ -131,15 +132,13 @@ class PersonServiceImplTest {
 
         every { repository.save(person) } returns personReturn
 
-        //when
         val result = service.savePerson(person)
 
-        //then
         verify(exactly = 1) { repository.save(person) }
         Assertions.assertEquals(personReturn, result)
     }
 
-    @DisplayName("should update a person with sucess")
+    @DisplayName("should update a person with success")
     @Test
     fun updatePerson_shouldReturnUpdatedPerson(){
         val person = Person(
@@ -198,4 +197,114 @@ class PersonServiceImplTest {
         assertThrows<Exception> { service.updatePerson(personUpdated) }
         verify(exactly = 0) { repository.save(any()) }
     }
+
+    @DisplayName("should update a password with sucess")
+    @Test
+    fun updatePasswordPerson_shouldReturnUpdatedPersonPassword(){
+        val request = RequestUpdatePasswordPerson(
+            idPerson = 1,
+            password = "joselito123",
+            newPassword = "litojose123"
+        )
+
+        val person = Person(
+            idPerson = 1,
+            name = "Joselito",
+            birthday = LocalDate.now(),
+            email = "teste@teste.com",
+            password = "joselito123"
+        )
+
+        val personUpdated = Person(
+            idPerson = 1,
+            name = "Joselito",
+            birthday = LocalDate.now(),
+            email = "teste@teste.com",
+            password = "litojose"
+        )
+
+        val personReturn = person.apply { password = "litojose123" }
+
+        every { service.getPersonById(person.idPerson!!) } returns person
+        every { authenticationService.authenticate(any(),any()) } returns Unit
+        every { authenticationService.generateBCryptPassword(any())} returns "litojose"
+        every { repository.save(any()) } returns personReturn
+        val result = service.updatePasswordPerson(request)
+
+        verify(exactly = 1) { repository.save(person) }
+        Assertions.assertEquals(personUpdated, result)
+
+    }
+
+    @DisplayName("Should return exception when authentication failed")
+    @Test
+    fun updatePersonPassword_shouldReturnExceptionWhenAuthFailed(){
+
+        val request = RequestUpdatePasswordPerson(
+            idPerson = 1,
+            password = "joselito123",
+            newPassword = "litojose123"
+        )
+
+        val person = Person(
+            idPerson = 1,
+            name = "Joselito",
+            birthday = LocalDate.now(),
+            email = "teste@teste.com",
+            password = "joselito123"
+        )
+
+        val personUpdated = Person(
+            idPerson = 1,
+            name = "Joselito",
+            birthday = LocalDate.now(),
+            email = "teste@teste.com",
+            password = "litojose"
+        )
+
+        val personReturn = person.apply { password = "litojose123" }
+
+        every { service.getPersonById(person.idPerson!!) } returns person
+        every { authenticationService.authenticate(any(),any()) } throws Exception()
+        every { authenticationService.generateBCryptPassword(any())} returns "litojose"
+        every { repository.save(any()) } returns personReturn
+
+        assertThrows<Exception> { service.updatePasswordPerson(request) }
+        verify(exactly = 0) { repository.save(any()) }
+    }
+
+    @DisplayName("Should delete a person with sucess")
+    @Test
+    fun deletePerson_shouldDeletePersonWithSucess(){
+        val idPerson = "8"
+
+        val personReturn = Unit
+
+        every { repository.deleteById(any())} returns Unit
+
+        val result = service.deletePerson(idPerson)
+
+        Assertions.assertEquals(personReturn, result)
+    }
+
+    @DisplayName("should return all monthly birthdays")
+    @Test
+    fun findByMonthlyBirthdays_shouldReturnMonthlyBirthdays(){
+        val today = LocalDate.now()
+
+        val listReturn = listOf(Person(
+            idPerson = 8,
+            name = "Joselito",
+            birthday = today,
+            email = "joselito@gmail.com",
+            password = "joselito123"
+        ))
+
+        every { repository.findByMonthlyBirthdays() } returns listReturn
+
+        val result = service.findByMonthlyBirthdays()
+
+        Assertions.assertEquals(listReturn, result)
+    }
+
 }
