@@ -55,14 +55,14 @@ class NotificationServiceImpl(
                 sendNotificationByPersonId(
                     it.idPerson!!,
                     "Tem gente do ${group.name} fazendo aniversário hoje",
-                    "Aniversariantes do grupo: ${birthdayMembers?.forEach { birthday -> "\n"+  birthday.name }}"
+                    "Aniversariantes do grupo: \n${birthdayMembers?.filter { birthday -> birthday.idPerson != idPerson }?.map { birthday ->  birthday.name }.toString().replace("[","").replace("]","")}"
                 )
             }
             println("enviando em email para o aniversariante com a lista dos demais aniversariantes do dia ${birthdayMembers?.filter { birthday -> birthday.idPerson != idPerson }}")
             sendNotificationByPersonId(
                 idPerson,
-                "Tem gente do ${group.name} fazendo aniversário hoje",
-                "Aniversariantes do grupo: ${birthdayMembers?.filter { birthday -> birthday.idPerson != idPerson }?.forEach { birthday -> "\n"+   birthday.name }}"
+                "Tem gente do ${group.name} fazendo aniversário hoje também!",
+                "Parabéns pelo seu aniversário!\nNessa data especial, aproveite para celebrar junto com os outros aniversariantes que fazem parte do mesmo grupo que você: \n${birthdayMembers?.filter { birthday -> birthday.idPerson != idPerson }?.map { birthday ->  birthday.name }.toString().replace("[","").replace("]","")}"
             )
 
         } else {
@@ -102,7 +102,7 @@ class NotificationServiceImpl(
                             sendNotificationByPersonId(
                                 members.idPerson!!,
                                 "Tem gente do ${group.name} fazendo aniversário esse mês",
-                                "Aniversariantes do mês: \n ${birthdayMembers?.forEach { birthday -> "- " + birthday.name + " faz aniversário no dia " + birthday.birthday.dayOfMonth + " \n"}}"
+                                "Aniversariantes do mês: ${birthdayMembers?.map { birthday -> "\n" + birthday.name + " faz aniversário no dia " + birthday.birthday.dayOfMonth }.toString().replace("[","").replace("]","")}"
                             )
                         }
                         notificatedGroups.add(group.idGroup)
