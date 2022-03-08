@@ -35,49 +35,92 @@ class NotificationServiceImpl(
     override fun notificateBirthdaysToday() {
         logger.info("M=notificateBirthdaysToday msg=Buscando aniversariantes do dia ${LocalDate.now()}")
         val birthdays = personService.getBirthdaysToday()
+        val notificatedGroups = mutableListOf<Long?>()
         logger.info("Lista de aniversariantes: $birthdays")
         birthdays?.forEach {
             sendNotificationByPersonId(it.idPerson!!, "Feliz Aniversário ${it.name.split(" ").first()}", "Parabéns <3 !")
-            println("enviei email pro aniversariante ${it.name}")
-            it.groups?.forEach { group -> sendEmailToGroupOfBirthdayToday(birthdays, group, it.idPerson!!) }
+            logger.info("enviei email pro aniversariante ${it.name}")
+            it.groups?.forEach { group ->
+                if (!notificatedGroups.contains(group.idGroup)) {
+                    val nonBirthdayMembers = group.members?.filter { member -> !birthdays.contains(member) }
+                    val birthdayMembers = group.members?.filter { member -> birthdays.contains(member) }
+
+                    if (hasMoreThanOneBirthdayInGroup(nonBirthdayMembers!!, group.members!!) &&
+                        nonBirthdayMembers.isEmpty()
+                    ) {
+                        nonBirthdayMembers.forEach { nonBirthdayMember ->
+                            println("enviei email pra todos: ${it.name} com a lista $birthdayMembers")
+                            sendNotificationByPersonId(
+                                nonBirthdayMember.idPerson!!,
+                                "Tem gente do ${group.name} fazendo aniversário hoje",
+                                "Aniversariantes do grupo: \n${
+                                    birthdayMembers?.map { birthday -> birthday.name }.toString()
+                                        .replace("[", "")
+                                        .replace("]", "")}"
+                            )
+                        }
+                        logger.info("enviando em email para o aniversariante com a lista dos demais aniversariantes do dia ${birthdayMembers?.filter { birthday -> birthday.idPerson != it.idPerson!! }}")
+                        sendNotificationByPersonId(
+                            it.idPerson!!,
+                            "Eiita! Além de você o ${group.name} tem outros aniversariantes!",
+                            "Nessa data especial, aproveite para celebrar junto com os outros aniversariantes que também fazem parte do ${group.name}: \n${
+                                birthdayMembers?.filter { birthday -> birthday.idPerson != it.idPerson!! }
+                                    ?.map { birthday -> birthday.name }.toString()
+                                    .replace("[", "")
+                                    .replace("]", "")
+                            }"
+                        )
+                        notificatedGroups.add(group.idGroup)
+                    } else {
+                        nonBirthdayMembers.forEach { nonBirthdayMember ->
+                            logger.info("enviei email apenas para o integrante: ${nonBirthdayMember.name} falando do aniversario do $it.idPerson!!")
+                            sendNotificationByPersonId(
+                                nonBirthdayMember.idPerson!!,
+                                "${birthdayMembers?.get(0)?.name?.split(" ")?.first()} do ${group.name} faz aniversário hoje!",
+                                "Celebre essa data especial junto com ${birthdayMembers?.get(0)?.name} hoje! Hoje é dia de festa!"
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 
-    private fun sendEmailToGroupOfBirthdayToday(birthdays: List<Person>, group: Group, idPerson: Long) {
-        val nonBirthdayMembers = group.members?.filter { member -> !birthdays.contains(member) }
-        val birthdayMembers = group.members?.filter { member -> birthdays.contains(member) }
-
-        if (hasMoreThanOneBirthdayInGroup(nonBirthdayMembers!!, group.members!!) ||
-            nonBirthdayMembers.isEmpty()
-        ) {
-            nonBirthdayMembers.forEach {
-                println("enviei email pra todos: ${it.name} com a lista $birthdayMembers")
-                sendNotificationByPersonId(
-                    it.idPerson!!,
-                    "Tem gente do ${group.name} fazendo aniversário hoje",
-                    "Aniversariantes do grupo: \n${birthdayMembers?.map { birthday ->  birthday.name }.toString().replace("[","").replace("]","")}"
-                )
-            }
-            println("enviando em email para o aniversariante com a lista dos demais aniversariantes do dia ${birthdayMembers?.filter { birthday -> birthday.idPerson != idPerson }}")
-            sendNotificationByPersonId(
-                idPerson,
-                "Tem gente do ${group.name} fazendo aniversário hoje também!",
-                "Parabéns pelo seu aniversário!\nNessa data especial, aproveite para celebrar junto com os outros aniversariantes que fazem parte do mesmo grupo que você: \n${birthdayMembers?.filter { birthday -> birthday.idPerson != idPerson }?.map { birthday ->  birthday.name }.toString().replace("[","").replace("]","")}"
-            )
-
-        } else {
-            nonBirthdayMembers.forEach {
-                println("enviei email apenas para os integrantes: ${it.name} falando do aniversario do $idPerson")
-                sendNotificationByPersonId(
-                    it.idPerson!!,
-                    "${birthdayMembers?.get(0)?.name?.split(" ")?.first()} do ${group.name} faz aniversario hoje!",
-                    "${birthdayMembers?.get(0)?.name?.split(" ")?.first()} está fazendo aniversário hoje!"
-                )
-            }
-
-        }
-
-    }
+//    private fun sendEmailToGroupOfBirthdayToday(birthdays: List<Person>, group: Group, idPerson: Long) {
+//        val nonBirthdayMembers = group.members?.filter { member -> !birthdays.contains(member) }
+//        val birthdayMembers = group.members?.filter { member -> birthdays.contains(member) }
+//
+//        if (hasMoreThanOneBirthdayInGroup(nonBirthdayMembers!!, group.members!!) &&
+//            nonBirthdayMembers.isEmpty()
+//        ) {
+//            nonBirthdayMembers.forEach {
+//                println("enviei email pra todos: ${it.name} com a lista $birthdayMembers")
+//                sendNotificationByPersonId(
+//                    it.idPerson!!,
+//                    "Tem gente do ${group.name} fazendo aniversário hoje",
+//                    "Aniversariantes do grupo: \n${birthdayMembers?.map { birthday ->  birthday.name }.toString().replace("[","").replace("]","")}"
+//                )
+//            }
+//            println("enviando em email para o aniversariante com a lista dos demais aniversariantes do dia ${birthdayMembers?.filter { birthday -> birthday.idPerson != idPerson }}")
+//            sendNotificationByPersonId(
+//                idPerson,
+//                "Tem gente do ${group.name} fazendo aniversário hoje também!",
+//                "Parabéns pelo seu aniversário!\nNessa data especial, aproveite para celebrar junto com os outros aniversariantes que fazem parte do mesmo grupo que você: \n${birthdayMembers?.filter { birthday -> birthday.idPerson != idPerson }?.map { birthday ->  birthday.name }.toString().replace("[","").replace("]","")}"
+//            )
+//
+//        } else {
+//            nonBirthdayMembers.forEach {
+//                println("enviei email apenas para os integrantes: ${it.name} falando do aniversario do $idPerson")
+//                sendNotificationByPersonId(
+//                    it.idPerson!!,
+//                    "${birthdayMembers?.get(0)?.name?.split(" ")?.first()} do ${group.name} faz aniversario hoje!",
+//                    "${birthdayMembers?.get(0)?.name?.split(" ")?.first()} está fazendo aniversário hoje!"
+//                )
+//            }
+//
+//        }
+//
+//    }
 
     private fun hasMoreThanOneBirthdayInGroup(
         membrosQueNaoFazemNiverNoGrupo: List<Person>,
@@ -98,27 +141,26 @@ class NotificationServiceImpl(
 
                     if (hasMoreThanOneBirthdayInGroup(nonBirthdayMembers!!, group.members!!)) {
                         group.members!!.forEach { members ->
-                            println("enviei email pra todos: ${it.name} com a lista $birthdaysMonthly")
+                            logger.info("enviei email pra todos: ${it.name} com a lista $birthdaysMonthly")
                             sendNotificationByPersonId(
                                 members.idPerson!!,
                                 "Tem gente do ${group.name} fazendo aniversário esse mês",
-                                "Aniversariantes do mês: ${birthdayMembers?.map { birthday -> "\n" + birthday.name + " faz aniversário no dia " + birthday.birthday.dayOfMonth }.toString().replace("[","").replace("]","")}"
+                                "Opa! bão?\nEstamos passando aqui para te lembrar dos aniversariantes do mês do ${group.name}:\n" +
+                                        birthdayMembers?.map { birthday -> "\n" + birthday.name + " faz aniversário no dia " + birthday.birthday.dayOfMonth }.toString().replace("[","").replace("]","")
                             )
                         }
                         notificatedGroups.add(group.idGroup)
                     } else if (nonBirthdayMembers.isNotEmpty()) {
-                        nonBirthdayMembers.forEach { nonBirthdayMember -> println("enviei email apenas para os integrantes: ${it.name}")
+                        nonBirthdayMembers.forEach { nonBirthdayMember ->
+                            logger.info("enviei email apenas para os integrantes: ${it.name}")
                             sendNotificationByPersonId(
                                 nonBirthdayMember.idPerson!!,
-                                "${birthdayMembers?.get(0)?.name?.split(" ")?.first()} do ${group.name} faz aniversário esse mês!",
-                                "${birthdayMembers?.get(0)?.name?.split(" ")?.first()} está fazendo aniversário esse mês!")
+                                "${birthdayMembers?.get(0)?.name} do ${group.name} faz aniversário esse mês!",
+                                "Opa! bão?\nNão esquece, ${birthdayMembers?.get(0)?.name} está fazendo aniversário dia ${birthdayMembers?.get(0)?.birthday!!.dayOfMonth} desse mês!")
                         }
                     }
-
                 }
-
             }
         }
     }
-
 }
