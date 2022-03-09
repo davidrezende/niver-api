@@ -38,26 +38,33 @@ class NotificationServiceImpl(
         val notificatedGroups = mutableListOf<Long?>()
         logger.info("Lista de aniversariantes: $birthdays")
         birthdays?.forEach {
-            sendNotificationByPersonId(it.idPerson!!, "Feliz Aniversário ${it.name.split(" ").first()}", "Parabéns <3 !")
+            sendNotificationByPersonId(
+                it.idPerson!!,
+                "Feliz Aniversário ${it.name.split(" ").first()}",
+                "Parabéns <3 !"
+            )
             logger.info("enviei email pro aniversariante ${it.name}")
             it.groups?.forEach { group ->
-                if (!notificatedGroups.contains(group.idGroup)) {
+                if (group.members != null && group.members!!.isNotEmpty()) {
                     val nonBirthdayMembers = group.members?.filter { member -> !birthdays.contains(member) }
                     val birthdayMembers = group.members?.filter { member -> birthdays.contains(member) }
 
-                    if (hasMoreThanOneBirthdayInGroup(nonBirthdayMembers!!, group.members!!) &&
-                        nonBirthdayMembers.isEmpty()
+                    if (hasMoreThanOneBirthdayInGroup(nonBirthdayMembers!!, group.members!!)
                     ) {
-                        nonBirthdayMembers.forEach { nonBirthdayMember ->
-                            println("enviei email pra todos: ${it.name} com a lista $birthdayMembers")
-                            sendNotificationByPersonId(
-                                nonBirthdayMember.idPerson!!,
-                                "Tem gente do ${group.name} fazendo aniversário hoje",
-                                "Aniversariantes do grupo: \n${
-                                    birthdayMembers?.map { birthday -> birthday.name }.toString()
-                                        .replace("[", "")
-                                        .replace("]", "")}"
-                            )
+                        if (!notificatedGroups.contains(group.idGroup)) {
+                            nonBirthdayMembers.forEach { nonBirthdayMember ->
+                                println("enviei email pra todos: ${it.name} com a lista $birthdayMembers")
+                                sendNotificationByPersonId(
+                                    nonBirthdayMember.idPerson!!,
+                                    "Tem gente do ${group.name} fazendo aniversário hoje",
+                                    "Aniversariantes do grupo: \n${
+                                        birthdayMembers?.map { birthday -> birthday.name }.toString()
+                                            .replace("[", "")
+                                            .replace("]", "")
+                                    }"
+                                )
+                            }
+                            notificatedGroups.add(group.idGroup)
                         }
                         logger.info("enviando em email para o aniversariante com a lista dos demais aniversariantes do dia ${birthdayMembers?.filter { birthday -> birthday.idPerson != it.idPerson!! }}")
                         sendNotificationByPersonId(
@@ -70,14 +77,15 @@ class NotificationServiceImpl(
                                     .replace("]", "")
                             }"
                         )
-                        notificatedGroups.add(group.idGroup)
                     } else {
                         nonBirthdayMembers.forEach { nonBirthdayMember ->
                             logger.info("enviei email apenas para o integrante: ${nonBirthdayMember.name} falando do aniversario do $it.idPerson!!")
                             sendNotificationByPersonId(
                                 nonBirthdayMember.idPerson!!,
-                                "${birthdayMembers?.get(0)?.name?.split(" ")?.first()} do ${group.name} faz aniversário hoje!",
-                                "Celebre essa data especial junto com ${birthdayMembers?.get(0)?.name} hoje! Hoje é dia de festa!"
+                                "${
+                                    birthdayMembers?.get(0)?.name?.split(" ")?.first()
+                                } do ${group.name} faz aniversário hoje!",
+                                "Celebre essa data especial junto com ${birthdayMembers?.get(0)?.name} !"
                             )
                         }
                     }
@@ -146,7 +154,8 @@ class NotificationServiceImpl(
                                 members.idPerson!!,
                                 "Tem gente do ${group.name} fazendo aniversário esse mês",
                                 "Opa! bão?\nEstamos passando aqui para te lembrar dos aniversariantes do mês do ${group.name}:\n" +
-                                        birthdayMembers?.map { birthday -> "\n" + birthday.name + " faz aniversário no dia " + birthday.birthday.dayOfMonth }.toString().replace("[","").replace("]","")
+                                        birthdayMembers?.map { birthday -> "\n" + birthday.name + " faz aniversário no dia " + birthday.birthday.dayOfMonth }
+                                            .toString().replace("[", "").replace("]", "")
                             )
                         }
                         notificatedGroups.add(group.idGroup)
@@ -156,7 +165,12 @@ class NotificationServiceImpl(
                             sendNotificationByPersonId(
                                 nonBirthdayMember.idPerson!!,
                                 "${birthdayMembers?.get(0)?.name} do ${group.name} faz aniversário esse mês!",
-                                "Opa! bão?\nNão esquece, ${birthdayMembers?.get(0)?.name} está fazendo aniversário dia ${birthdayMembers?.get(0)?.birthday!!.dayOfMonth} desse mês!")
+                                "Opa! bão?\nNão esquece, ${birthdayMembers?.get(0)?.name} está fazendo aniversário dia ${
+                                    birthdayMembers?.get(
+                                        0
+                                    )?.birthday!!.dayOfMonth
+                                } desse mês!"
+                            )
                         }
                     }
                 }
