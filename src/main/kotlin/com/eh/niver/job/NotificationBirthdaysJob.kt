@@ -18,7 +18,7 @@ class NotificationBirthdaysJob(val notificationService: NotificationService) {
     }
 
     @Async
-    @Scheduled(cron = "0 45 18 * * *")
+    @Scheduled(cron = "0 0 6 * * *")
     @Transactional
     fun notificationBirthdays() {
         logger.info("M=notificationBirthdays msg=init at ${LocalDateTime.now()}")
@@ -27,7 +27,7 @@ class NotificationBirthdaysJob(val notificationService: NotificationService) {
     }
 
     @Async
-    @Scheduled(cron = "0 45 18 * * *")
+    @Scheduled(cron = "0 0 6 * * *")
     @Transactional
     fun notificationMonthlyBirthdays(){
         logger.info("M=notificationMonthlyBirthdays msg=init at ${LocalDateTime.now()}")
