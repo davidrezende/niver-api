@@ -1,7 +1,11 @@
 spring:
   jpa:
-    generate-ddl: 'true'
+    generate-ddl: 'false'
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: 'false'
+    properties:
+      hibernate:
+        format_sql=true: 'false'
 
   mail:
     host: smtp.gmail.com
@@ -13,10 +17,10 @@ spring:
           starttls:
             enable: 'true'
           auth: 'true'
-    password: ALTERAR
+    password: alterar
 
   datasource:
-    password: admin123
+    password: 992120ogaiht
     username: postgres
     url: jdbc:postgresql://localhost:5432/niverdb
 
@@ -25,12 +29,32 @@ spring:
       matching-strategy: ant_path_matcher
 
   flyway:
-    enabled: false
+    enabled: true
     url: jdbc:postgresql://localhost:5432/niverdb
-    schemas: niverdb
+    schemas: public
     user: postgres
     password: admin123
     locations: "classpath:db/migration"
+    baselineOnMigrate: 'true'
 
 server:
   port: '8090'
+  ssl:
+    keyStoreType: PKCS12
+    keyStore: classpath:keystore/keystore.p12
+    keyStorePassword: test123
+    #keyStore: classpath:keystore/niver-api-test.p12
+    #keyStorePassword: test123
+    #keyAlias: niver-api-test
+    enabled: false
+
+jwt:
+  secret: exImfoq7urluYKsVqyWYj6dJgANgxk8u
+  expiration: "86400000"
+
+cors:
+  origin: http://localhost:3000
+
+
+springdoc:
+  packagesToScan: "com.eh.niver.controller"

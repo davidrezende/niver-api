@@ -1,75 +1,75 @@
 package com.eh.niver.controller
 
 import com.eh.niver.model.Person
-import com.eh.niver.repository.GroupRepository
-import com.eh.niver.repository.PersonRepository
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
+import com.eh.niver.model.vo.RequestUpdatePasswordPerson
+import com.eh.niver.model.vo.RequestUpdatePerson
+import com.eh.niver.service.PersonService
+import com.eh.niver.service.UserService
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
+import java.util.*
 
-@Api(value = "Endpoints de pessoa.")
+@Tag(name= "Pessoa")
 @RestController
+@SecurityRequirement(name = "niverapi")
 @RequestMapping("person/api")
-class PersonController(val repository: PersonRepository, val repositoryGroup: GroupRepository ) {
+class PersonController(val personService: PersonService) {
 
-    companion object{
+    companion object {
         private val logger = LoggerFactory.getLogger(PersonController::class.java)
     }
 
-    @ApiOperation(value = "Procura pessoa por Id.")
+    @Autowired
+    private lateinit var userService: UserService
+
+    @Operation(summary = "Procura pessoa por Id.")
     @GetMapping("/id/{idPerson}")
     fun searchPersonById(@PathVariable idPerson: Long): Person {
-        logger.info("Procurando pessoa por ID: $idPerson")
-        return repository.getById(idPerson)
+        return personService.getPersonById(idPerson)
     }
 
-    @ApiOperation(value = "Procura uma pessoa por email.")
+    @Operation(summary = "Procura uma pessoa por email.")
     @GetMapping("/email/{email}")
-    fun searchPersonByEmail(@PathVariable email: String): Person {
-        logger.info("Procurando pessoa por Email: $email")
-        return repository.findByEmail(email)
+    fun searchPersonByEmail(@PathVariable email: String): Optional<Person> {
+        return personService.getPersonByEmail(email)
     }
 
-    @ApiOperation(value = "Procura aniversáriantes do dia.")
+    @Operation(summary = "Procura aniversáriantes do dia.")
     @GetMapping("/birthdays")
-    fun searchBirthdaysByToday(): List<Person> {
+    fun searchBirthdaysByToday(): List<Person>? {
         val today = LocalDate.now()
-        logger.info("Procurando aniversários hoje: $today")
-        return repository.findByBirthdaysForToday(today)
+        return personService.getBirthdaysToday()
     }
 
-    @ApiOperation(value = "Salva uma pessoa.")
+    @Operation(summary = "Salva uma pessoa.")
     @PostMapping()
     fun savePerson(@RequestBody person: Person): Person {
-        logger.info("Salvando uma pessoa: $person")
-        return repository.save(person)
+        return userService.create(person)
     }
 
-    @ApiOperation(value = "Atualiza uma pessoa.")
-    @PutMapping()
-    fun updatePerson(@RequestBody person: Person): Person {
-        logger.info("Atualizando uma pessoa: $person")
-        return repository.save(person)
+    @Operation(summary = "Atualiza uma pessoa.")
+    @PutMapping
+    fun updatePerson(@RequestBody request: RequestUpdatePerson): Person {
+        logger.info("Atualizando uma pessoa: ${request.idPerson}")
+        return personService.updatePerson(request)
     }
 
-    @ApiOperation(value = "Deleta uma pessoa.")
+    @Operation(summary = "Atualiza a senha de uma pessoa.")
+    @PutMapping("/password")
+    fun updatePasswordPerson(@RequestBody request: RequestUpdatePasswordPerson): Person {
+        logger.info("Atualizando uma pessoa: ${request.idPerson}")
+        return personService.updatePasswordPerson(request)
+    }
+
+    @Operation(summary = "Deleta uma pessoa.")
     @DeleteMapping("/{personId}")
     fun deletePerson(@PathVariable personId: String) {
-        logger.info("Deletando uma pessoa $personId")
-        return repository.deleteById(personId.toLong())
-    }
-
-    fun somaERetorna4(n1: Int, n2: Int): Int{
-        val result = n1 + n2
-        return if(result == 4){
-            println("sucesso")
-            result
-        }else{
-            println("ops")
-            result
-        }
+        return personService.deletePerson(personId)
     }
 
 }

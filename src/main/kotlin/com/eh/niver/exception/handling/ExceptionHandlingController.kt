@@ -4,6 +4,7 @@ import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
+import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestController
@@ -37,6 +38,16 @@ class ExceptionHandlingController {
             ex.message!!
         )
         return ResponseEntity(errorDetails, HttpStatus.BAD_REQUEST)
+    }
+
+    @ExceptionHandler(value = [(BadCredentialsException::class)])
+    fun handleBadCredentialsException(ex: BadCredentialsException, request: WebRequest): ResponseEntity<ErrorsDetails> {
+        val errorDetails = ErrorsDetails(
+            Date(),
+            HttpStatus.UNAUTHORIZED.reasonPhrase,
+            ex.message!!
+        )
+        return ResponseEntity(errorDetails, HttpStatus.UNAUTHORIZED)
     }
 
 }

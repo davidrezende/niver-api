@@ -1,6 +1,9 @@
 package com.eh.niver.model.vo
 
+import java.time.LocalDate
+
 data class ResponseMember(
-    var id : Long,
-    var name: String
+    var idPerson : Long,
+    var name: String?,
+    var birthday: LocalDate? = null
 )
