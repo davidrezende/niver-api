@@ -189,8 +189,6 @@ class PersonServiceImplTest {
             confirmPassword = "joselito123"
         )
 
-        val personReturn = person.apply { name = "LitoJose" }
-
         every { service.getPersonById(person.idPerson!!) } returns person
         every { authenticationService.authenticate(person.email,personUpdated.confirmPassword) } throws Exception()
 
@@ -254,37 +252,23 @@ class PersonServiceImplTest {
             password = "joselito123"
         )
 
-        val personUpdated = Person(
-            idPerson = 1,
-            name = "Joselito",
-            birthday = LocalDate.now(),
-            email = "teste@teste.com",
-            password = "litojose"
-        )
-
-        val personReturn = person.apply { password = "litojose123" }
-
         every { service.getPersonById(person.idPerson!!) } returns person
         every { authenticationService.authenticate(any(),any()) } throws Exception()
-        every { authenticationService.generateBCryptPassword(any())} returns "litojose"
-        every { repository.save(any()) } returns personReturn
 
         assertThrows<Exception> { service.updatePasswordPerson(request) }
         verify(exactly = 0) { repository.save(any()) }
     }
 
-    @DisplayName("Should delete a person with sucess")
+    @DisplayName("Should delete a person with success")
     @Test
-    fun deletePerson_shouldDeletePersonWithSucess(){
-        val idPerson = "8"
-
-        val personReturn = Unit
+    fun deletePerson_shouldDeletePersonWithSuccess(){
+        val personId = "8"
 
         every { repository.deleteById(any())} returns Unit
 
-        val result = service.deletePerson(idPerson)
+        service.deletePerson(personId)
 
-        Assertions.assertEquals(personReturn, result)
+        verify(exactly = 1) { repository.deleteById(personId.toLong()) }
     }
 
     @DisplayName("should return all monthly birthdays")
