@@ -14,7 +14,11 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
-class GroupServiceImpl(val repository: GroupRepository, val personService: PersonService, val invitationService: InvitationService) : GroupService {
+class GroupServiceImpl(
+    val repository: GroupRepository,
+    val personService: PersonService,
+    val invitationService: InvitationService
+) : GroupService {
 
     companion object {
         private val logger = LoggerFactory.getLogger(GroupServiceImpl::class.java)
@@ -87,9 +91,9 @@ class GroupServiceImpl(val repository: GroupRepository, val personService: Perso
                 name = it.name,
                 idGroup = it.idGroup,
                 owner = ResponseMember(
-                        idPerson = it.owner.idPerson!!,
-                        name = it.owner.name,
-                        birthday = it.owner.birthday
+                    idPerson = it.owner.idPerson!!,
+                    name = it.owner.name,
+                    birthday = it.owner.birthday
                 ),
                 members = it.members?.map { oto ->
                     ResponseMember(
@@ -108,27 +112,33 @@ class GroupServiceImpl(val repository: GroupRepository, val personService: Perso
     }
 
     override fun saveMemberInGroup(member: RequestSaveMember) {
-        logger.info("Salvando a pessoa: ${member.idPerson} no grupo: ${member.idGroup}")
-        val group = repository.findById(member.idGroup)
-        val person = personService.getPersonById(member.idPerson)
-        if (!group.isEmpty) {
+        try {
+            logger.info("Salvando a pessoa: ${member.idPerson} no grupo: ${member.idGroup}")
+            val group = repository.findById(member.idGroup)
+            val person = personService.getPersonById(member.idPerson)
             group.get().members?.add(person)
+            invitationService.updateUsedGroupInvite(member.hash)
+            repository.save(group.get())
+        } catch (e: Exception) {
+            logger.error("M=saveMemberInGroup E=error_save_member_in_group idPerson:${member.idPerson}, idGroup:${member.idGroup} e:$e")
+            throw e
         }
-
-        invitationService.updateUsedGroupInvite(member.hash)
-        repository.save(group.get())
     }
 
     override fun deleteMemberInGroup(idPerson: String, idGroup: String) {
-        logger.info("Deletando a pessoa:$idPerson do grupo:$idGroup")
-        val group = repository.findById(idGroup.toLong())
-        if (group.isEmpty) {
-            throw Exception("Grupo não existe!")
+        try {
+            logger.info("Deletando a pessoa:$idPerson do grupo:$idGroup")
+            val group = repository.findById(idGroup.toLong())
+            if (!group.isEmpty) {
+                group.get().members?.remove(
+                    group.get().members!!.first { it.idPerson == idPerson.toLong() }
+                )
+            }
+            repository.save(group.get())
+        } catch (e: Exception) {
+            logger.error("M=deleteMemberInGroup E=error_delete_member_in_group idPerson:${idPerson}, idGroup:${idGroup} e:$e")
+            throw e
         }
-        group.get().members?.remove(
-            group.get().members!!.first { it.idPerson == idPerson.toLong() }
-        )
-        repository.save(group.get())
     }
 
 }
