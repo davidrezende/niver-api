@@ -1,13 +1,22 @@
 # Niver API
-## _NiverDeQuem Platform. Manage and notify the birthdays of people who are part of a group._
+![Build Status](https://github.com/davidrezende/niver-api/actions/workflows/build.yml/badge.svg?branch=main)
 
-[![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
-
+[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-black.svg)](https://sonarcloud.io/summary/new_code?id=davidrezende_niver-api)
+### _NiverDeQuem Platform. Manage and notify the birthdays of people who are part of a group._
 Api developed in kotlin with Spring Framework. Used Postgres relational database
+
+## Demo ( Production )
+
+**NiverDeQuem** is available at **[here](https://niverdequem.tk).**
 
 ## Architecture
 ![Diagram Architecture NiverDeQuem](images/diagram.jpg)
 
+## Workflow Pipeline
+
+The project uses [github actions](https://github.com/davidrezende/niver-api/actions) to run a build and CI/CD pipeline and [SonarCloud](https://sonarcloud.io/) integration.
+
+>[.github/workflows/build.yml](.github/workflows/build.yml)
 ## Tech
 
 - Spring Scheduled Tasks with cron
@@ -38,7 +47,3 @@ Run docker-compose.yml
 mvn clean package
 docker-compose up
 ```
-
-## Demo ( Production )
-
-**NiverDeQuem** is available at **[here](https://niverdequem.tk).**
