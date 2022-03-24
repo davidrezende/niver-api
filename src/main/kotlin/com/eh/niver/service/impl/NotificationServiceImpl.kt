@@ -57,7 +57,7 @@ class NotificationServiceImpl(
                                 sendNotificationByPersonId(
                                     nonBirthdayMember.idPerson!!,
                                     "Tem gente do ${group.name} fazendo aniversário hoje",
-                                    "Olá, ${nonBirthdayMember.name}! Tudo bem?!\nVocê se lembra que do ${group.name}?! Então! Temos aniversariantes no grupo: \n${
+                                    "Olá, ${nonBirthdayMember.name}! Tudo bem?!\nVocê se lembra do ${group.name}?! Temos aniversariantes no grupo: \n${
                                         birthdayMembers?.map { birthday -> birthday.name }.toString()
                                             .replace("[", "")
                                             .replace("]", "")

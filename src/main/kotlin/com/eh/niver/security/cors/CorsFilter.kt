@@ -13,16 +13,21 @@ import javax.servlet.http.HttpServletResponse
 @Order(Ordered.HIGHEST_PRECEDENCE)
 class CorsFilter : Filter {
 
-    @Value("\${cors.origin}")
-    lateinit var origin: String
+    @Value("#{'\${cors.origin}'.split(',')}")
+    lateinit var origin: List<String>
 
     @Throws(IOException::class, ServletException::class)
     override fun doFilter(req: ServletRequest, resp: ServletResponse, chain: FilterChain) {
         val request = req as HttpServletRequest
         val response = resp as HttpServletResponse
-        response.setHeader("Access-Control-Allow-Origin", origin)
+        println("origins aceitas: $origin")
         response.setHeader("Access-Control-Allow-Credentials", "true")
-        if ("OPTIONS" == request.method && origin == request.getHeader("Origin")) {
+        if(origin.contains(request.getHeader("Origin"))){
+            response.setHeader("Access-Control-Allow-Origin", origin[origin.indexOf(request.getHeader("Origin"))])
+        }else{
+            response.setHeader("Access-Control-Allow-Origin", origin[0])
+        }
+        if ("OPTIONS" == request.method && origin.contains(request.getHeader("Origin"))) {
             response.setHeader("Access-Control-Allow-Methods", "POST, GET, DELETE, PUT, OPTIONS")
             response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, Accept")
             response.setHeader("Access-Control-Max-Age", "3600")
