@@ -38,7 +38,11 @@ class PersonServiceImpl(val repository: PersonRepository,
 
     override fun getPersonByEmail(email: String): Optional<Person> {
         logger.info("Procurando pessoa por Email: $email")
-        return repository.findByEmail(email)
+        val person = repository.findByEmail(email)
+        if(person.isEmpty){
+            throw Exception("Pessoa não encontrada.")
+        }
+        return person
     }
 
     override fun savePerson(person: Person): Person {
